@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Music (large binaries — keep local, don't push)
+bgm/*.mp3
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local

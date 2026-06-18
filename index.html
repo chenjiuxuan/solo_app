@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>氿肆 · 小宇宙</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Nunito:wght@600;700;800;900&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans SC','Zen Maru Gothic',sans-serif;
+  background:#f8f6f3;
+  color:#2d2a38;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── Background (fixed) ─── */
+.bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0}
+.bg-gradient{
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(200,220,200,.45) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 70% at 80% 20%, rgba(210,190,240,.35) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(245,200,210,.3) 0%, transparent 60%),
+    linear-gradient(180deg, #f8f6f3 0%, #f0ece8 100%);
+}
+.dots{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(0,0,0,.04) 1px, transparent 1px);
+  background-size:32px 32px;
+}
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:0}
+.blob-1{width:400px;height:400px;background:rgba(165,200,175,.25);top:-100px;left:-100px}
+.blob-2{width:350px;height:350px;background:rgba(200,180,230,.2);bottom:-80px;right:-80px}
+.blob-3{width:250px;height:250px;background:rgba(245,195,210,.2);top:50%;left:60%}
+.star{position:fixed;pointer-events:none;z-index:1;color:rgba(180,160,200,.5);user-select:none}
+.music-note-f{position:fixed;pointer-events:none;z-index:1;color:rgba(165,200,175,.25);user-select:none}
+
+/* ─── Nav ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:100;
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(248,246,243,.75);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(0,0,0,.04);
+}
+.nav-brand{
+  font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:1.1rem;
+  color:#2d2a38;text-decoration:none;
+  letter-spacing:.04em;
+}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-links a{
+  padding:6px 14px;
+  border-radius:100px;
+  color:rgba(45,42,56,.5);
+  text-decoration:none;
+  font-size:.78rem;font-weight:500;
+  transition:all .2s;
+}
+.nav-links a:hover{color:#2d2a38;background:rgba(165,200,175,.15)}
+
+/* ─── Hero ─── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:100px 24px 60px;
+  position:relative;z-index:2;
+  text-align:center;
+  overflow:hidden;
+}
+.hero-viz{
+  position:absolute;bottom:0;left:0;right:0;
+  height:160px;
+  z-index:0;
+  pointer-events:none;
+  opacity:.5;
+}
+.avatar-frame{position:relative;width:200px;height:200px;margin-bottom:20px}
+.avatar-ring{
+  position:absolute;inset:-8px;
+  border-radius:50%;
+  border:3px solid rgba(165,200,175,.4);
+  animation:ring-pulse 3s ease-in-out infinite;
+}
+.avatar-ring-2{
+  position:absolute;inset:-16px;
+  border-radius:50%;
+  border:1.5px dashed rgba(200,180,230,.35);
+  animation:ring-spin 20s linear infinite;
+}
+@keyframes ring-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.5}}
+@keyframes ring-spin{to{transform:rotate(360deg)}}
+.avatar-img{
+  width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;position:relative;z-index:1;
+  box-shadow:0 8px 32px rgba(165,200,175,.25),0 0 0 4px rgba(255,255,255,.6);
+}
+.petal{position:absolute;font-size:1rem;pointer-events:none;opacity:0}
+.ruby{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(.85rem,2vw,1rem);
+  color:rgba(45,42,56,.4);
+  letter-spacing:.15em;margin-bottom:12px;
+}
+.name{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(2.8rem,7vw,4.5rem);
+  font-weight:900;letter-spacing:.06em;
+  color:#2d2a38;line-height:1.1;margin-bottom:4px;position:relative;
+  display:inline-block;
+}
+.name-desc{
+  position:absolute;top:-.3em;right:-.8em;
+  font-size:1.8rem;font-weight:400;
+  color:rgba(45,42,56,.3);
+  font-family:'Nunito',sans-serif;
+}
+.tagline{
+  font-size:clamp(.95rem,2vw,1.15rem);
+  color:rgba(45,42,56,.55);
+  max-width:360px;margin-bottom:36px;line-height:1.7;
+}
+.socials{display:flex;gap:14px}
+.social-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(255,255,255,.7);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(165,200,175,.3);
+  color:#2d2a38;text-decoration:none;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);
+}
+.social-btn:hover{
+  transform:translateY(-4px) scale(1.1);
+  border-color:rgba(165,200,175,.6);
+  box-shadow:0 6px 20px rgba(165,200,175,.3);
+}
+.social-btn svg{width:20px;height:20px}
+
+/* ─── Section common ─── */
+.section{
+  position:relative;z-index:2;
+  padding:100px 24px;
+}
+.section-inner{max-width:960px;margin:0 auto}
+.section-tag{
+  display:inline-block;
+  font-family:'Nunito',sans-serif;
+  font-size:.7rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(165,200,175,.8);
+  background:rgba(165,200,175,.12);
+  padding:4px 12px;border-radius:100px;
+  margin-bottom:12px;
+}
+.section-title{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(1.6rem,4vw,2.6rem);
+  font-weight:800;letter-spacing:.02em;
+  color:#2d2a38;margin-bottom:8px;
+}
+.section-sub{
+  font-size:.95rem;color:rgba(45,42,56,.45);
+  max-width:480px;margin-bottom:40px;line-height:1.6;
+}
+
+/* ─── Works ─── */
+.works-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+.work-card{
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(8px);
+  border:1.5px solid rgba(165,200,175,.2);
+  border-radius:20px;
+  overflow:hidden;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  cursor:default;
+}
+.work-card:hover{
+  border-color:rgba(165,200,175,.5);
+  transform:translateY(-6px);
+  box-shadow:0 12px 40px rgba(165,200,175,.2);
+}
+.work-thumb{
+  width:100%;height:180px;
+  background:rgba(165,200,175,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;
+  overflow:hidden;
+}
+.work-thumb img{width:100%;height:100%;object-fit:cover}
+.work-info{padding:20px}
+.work-info h3{
+  font-family:'Nunito',sans-serif;
+  font-size:1rem;font-weight:700;
+  margin-bottom:4px;
+}
+.work-info p{
+  font-size:.82rem;color:rgba(45,42,56,.5);
+  line-height:1.5;
+}
+.work-tags{
+  display:flex;gap:6px;flex-wrap:wrap;
+  margin-top:10px;
+}
+.work-tag{
+  font-size:.68rem;
+  padding:2px 10px;
+  border-radius:100px;
+  background:rgba(165,200,175,.15);
+  color:rgba(45,42,56,.5);
+  font-weight:500;
+}
+
+/* ─── Music Player ─── */
+.player-wrap{
+  display:flex;flex-direction:column;align-items:center;
+}
+.player-box{
+  background:rgba(255,255,255,.5);
+  backdrop-filter:blur(12px);
+  border:1.5px solid rgba(165,200,175,.25);
+  border-radius:24px;
+  padding:32px;
+  width:100%;max-width:400px;
+  text-align:center;
+}
+.player-cover{
+  width:160px;height:160px;
+  border-radius:50%;
+  margin:0 auto 0;
+  overflow:hidden;
+  animation:disc-spin 8s linear infinite;
+  animation-play-state:paused;
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
+}
+.cover-img{width:100%;height:100%;object-fit:cover;display:block}
+.player-box.playing .player-cover{animation-play-state:running}
+@keyframes disc-spin{to{transform:rotate(360deg)}}
+.player-song{
+  font-family:'Nunito',sans-serif;
+  font-size:1.1rem;font-weight:700;
+  margin-bottom:2px;
+}
+.player-artist{
+  font-size:.82rem;color:rgba(45,42,56,.45);
+  margin-bottom:24px;
+}
+.player-controls{
+  display:flex;align-items:center;justify-content:center;
+  gap:20px;
+}
+.player-btn{
+  width:44px;height:44px;border-radius:50%;
+  border:1.5px solid rgba(165,200,175,.3);
+  background:rgba(255,255,255,.6);
+  color:#2d2a38;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);
+}
+.player-btn:hover{transform:scale(1.1);border-color:rgba(165,200,175,.6)}
+.player-btn svg{width:18px;height:18px}
+.player-btn.pp{width:56px;height:56px;background:rgba(165,200,175,.2);border-color:rgba(165,200,175,.4)}
+.player-btn.pp svg{width:22px;height:22px}
+.player-progress{
+  margin-top:20px;
+  height:4px;
+  background:rgba(165,200,175,.15);
+  border-radius:4px;
+  overflow:hidden;
+}
+.player-progress-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,rgba(165,200,175,.5),rgba(200,180,230,.6));
+  border-radius:4px;
+}
+.player-progress{cursor:pointer}
+.player-volume{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:16px;width:100%;max-width:400px;
+}
+.vol-label{font-size:.8rem;opacity:.4}
+.vol-slider{
+  -webkit-appearance:none;appearance:none;
+  width:120px;height:4px;
+  background:rgba(165,200,175,.2);
+  border-radius:4px;outline:none;
+  cursor:pointer;
+}
+.vol-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:14px;height:14px;
+  border-radius:50%;
+  background:rgba(165,200,175,.6);
+  border:2px solid rgba(255,255,255,.6);
+  cursor:pointer;
+  transition:transform .2s;
+}
+.vol-slider::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.player-time{
+  display:flex;justify-content:space-between;
+  font-size:.68rem;color:rgba(45,42,56,.35);
+  margin-top:6px;
+}
+.player-playlist{
+  margin-top:20px;
+  width:100%;max-width:400px;
+}
+.playlist-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:background .2s;
+}
+.playlist-item:hover{background:rgba(165,200,175,.1)}
+.playlist-item.active{background:rgba(165,200,175,.15)}
+.playlist-num{
+  font-family:'Nunito',sans-serif;
+  font-size:.75rem;color:rgba(45,42,56,.35);
+  width:20px;text-align:center;
+}
+.playlist-info{flex:1}
+.playlist-info .name{
+  font-family:'Nunito',sans-serif;
+  font-size:.85rem;font-weight:600;
+  display:block;margin:0;
+  letter-spacing:0;
+}
+.playlist-info .artist{font-size:.72rem;color:rgba(45,42,56,.4);font-family:'Noto Sans SC',sans-serif}
+.playlist-dur{font-size:.72rem;color:rgba(45,42,56,.35)}
+
+/* ─── Journal ─── */
+.journal-list{display:flex;flex-direction:column;gap:16px}
+.journal-item{
+  background:rgba(255,255,255,.4);
+  backdrop-filter:blur(8px);
+  border:1.5px solid rgba(165,200,175,.15);
+  border-radius:18px;
+  padding:20px 24px;
+  transition:all .3s;
+}
+.journal-item:hover{border-color:rgba(165,200,175,.35);background:rgba(255,255,255,.55)}
+.journal-date{
+  font-size:.7rem;color:rgba(45,42,56,.35);
+  font-family:'Nunito',sans-serif;
+  font-weight:600;letter-spacing:.04em;
+  margin-bottom:6px;
+}
+.journal-text{
+  font-size:.9rem;line-height:1.7;
+  color:rgba(45,42,56,.7);
+}
+
+/* ─── About ─── */
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+}
+.about-left p{
+  font-size:.92rem;line-height:1.8;
+  color:rgba(45,42,56,.6);
+  margin-bottom:16px;
+}
+.skills-section{margin-top:24px}
+.skills-section h4{
+  font-family:'Nunito',sans-serif;
+  font-size:.8rem;font-weight:700;
+  margin-bottom:10px;color:rgba(45,42,56,.5);
+  letter-spacing:.04em;
+}
+.skill-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.skill-tag{
+  font-size:.75rem;font-weight:500;
+  padding:4px 14px;
+  border-radius:100px;
+  background:rgba(255,255,255,.5);
+  border:1.5px solid rgba(165,200,175,.2);
+  color:rgba(45,42,56,.6);
+  transition:all .2s;
+}
+.skill-tag:hover{background:rgba(165,200,175,.15);border-color:rgba(165,200,175,.4)}
+.about-right{
+  display:flex;flex-direction:column;gap:16px;
+}
+.about-stat{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;
+  background:rgba(255,255,255,.35);
+  border-radius:16px;
+  border:1.5px solid rgba(165,200,175,.12);
+}
+.about-stat-icon{
+  font-size:1.5rem;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(165,200,175,.12);
+  border-radius:12px;
+}
+.about-stat-info{flex:1}
+.about-stat-info .label{font-size:.72rem;color:rgba(45,42,56,.45);font-weight:500}
+.about-stat-info .val{font-size:.9rem;font-weight:600;color:#2d2a38}
+
+/* ─── Footer ─── */
+footer{
+  position:relative;z-index:2;
+  padding:40px 24px 28px;
+  text-align:center;
+  border-top:1px solid rgba(165,200,175,.15);
+}
+footer p{
+  font-size:.78rem;color:rgba(45,42,56,.35);
+}
+.footer-heart{color:rgba(200,180,230,.6)}
+
+/* ─── Responsive ─── */
+@media(max-width:768px){
+  nav{padding:12px 20px}
+  .nav-links a{padding:4px 10px;font-size:.72rem}
+  .hero{padding:100px 20px 50px}
+  .avatar-frame{width:150px;height:150px}
+  .name{font-size:clamp(2rem,8vw,2.8rem)}
+  .about-grid{grid-template-columns:1fr}
+  .section{padding:70px 20px}
+  .works-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .works-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"><div class="bg-gradient"></div><div class="dots"></div></div>
+<div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+<div id="stars"></div><div id="musicNotes"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">✦ 氿肆</a>
+  <div class="nav-links">
+    <a href="#works">作品</a>
+    <a href="#music">音乐</a>
+    <a href="#journal">日常</a>
+    <a href="#about">关于</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="heroViz" class="hero-viz" width="1200" height="320"></canvas>
+
+  <div class="avatar-frame" id="avatarFrame">
+    <div class="avatar-ring"></div>
+    <div class="avatar-ring-2"></div>
+    <img class="avatar-img" src="assets/avatar.jpg" alt="氿肆">
+  </div>
+  <div class="ruby" id="rubyEl">JIU SI</div>
+  <h1 class="name" id="nameEl">
+    氿肆
+    <span class="name-desc">✦</span>
+  </h1>
+  <p class="tagline" id="taglineEl">
+    在代码与流程之间徘徊的<br>
+    一只<em style="font-style:normal;color:#8FB5A5;font-weight:500;">摸鱼</em>工程师
+  </p>
+  <div class="socials" id="socialsEl">
+    <a href="#" class="social-btn" title="Bilibili" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267c.053-.071.116-.142.187-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.142.929.4.267.258.391.569.391.933 0 .364-.133.675-.4.933l-1.174 1.12V4.653zM5.333 7.24c-.746 0-1.373.24-1.88.72-.507.48-.769 1.1-.787 1.86v6.453c0 .773.258 1.422.773 1.947.516.524 1.162.786 1.94.786h13.334c.777 0 1.432-.262 1.966-.786.535-.525.803-1.174.806-1.947V9.82c0-.76-.267-1.38-.8-1.86s-1.138-.72-1.88-.72H5.333zm.427 2.373a.853.853 0 0 0-.587.253.815.815 0 0 0-.24.6v3.174c0 .24.08.44.24.6.16.16.356.24.587.24h1.386c.231 0 .427-.08.587-.24.16-.16.24-.36.24-.6v-3.174c0-.24-.08-.44-.24-.6a.795.795 0 0 0-.587-.253H5.76zm5.12 0a.853.853 0 0 0-.587.253.815.815 0 0 0-.24.6v3.174c0 .24.08.44.24.6.16.16.356.24.587.24h1.386c.231 0 .427-.08.587-.24.16-.16.24-.36.24-.6v-3.174c0-.24-.08-.44-.24-.6a.795.795 0 0 0-.587-.253h-1.386zm5.12 0a.853.853 0 0 0-.587.253.815.815 0 0 0-.24.6v3.174c0 .24.08.44.24.6.16.16.356.24.587.24h1.386c.231 0 .427-.08.587-.24.16-.16.24-.36.24-.6v-3.174c0-.24-.08-.44-.24-.6a.795.795 0 0 0-.587-.253h-1.386z"/></svg></a>
+    <a href="#" class="social-btn" title="GitHub" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
+    <a href="#" class="social-btn" title="Twitter / X" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="#" class="social-btn" title="微博" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zm-1.2-7.109c-2.952.39-4.996 2.589-4.562 4.922.434 2.323 3.098 3.891 6.05 3.503 2.951-.39 4.996-2.59 4.562-4.923-.434-2.322-3.098-3.891-6.05-3.5v-.002zM5.49 17.04c-.298.162-.513.39-.482.51.035.12.307.094.643-.051.336-.146.54-.377.507-.5-.031-.112-.293-.097-.668.041zm10.967-1.583c-.29.146-.478.374-.428.506.05.133.324.12.677-.034.353-.154.538-.385.478-.508-.059-.124-.326-.116-.727.036zm-6.69 1.555c-.495.2-.835.476-.78.608.056.13.441.073.907-.13.465-.204.769-.477.712-.61-.058-.13-.362-.081-.839.132zm1.803-.962c-.482.21-.812.505-.74.655.074.151.504.104 1.002-.099.498-.203.796-.513.718-.658-.078-.145-.497-.095-1.016.102h.036zM20.69 7.247a5.483 5.483 0 0 0-4.864-4.105 5.027 5.027 0 0 0-5.002 2.916 5.201 5.201 0 0 0 .918 5.813 4.887 4.887 0 0 0 5.479 1.316c2.44-.902 3.832-3.67 3.47-5.94zm-1.176.755c-.094.48-.46.87-.884.957-.424.087-.92-.18-1.233-.539-.45-.514-.48-1.284-.154-1.789.234-.362.618-.544.999-.505.38.039.817.38.988.851.096.266.114.528.054.75v.275h.23zm-.745.189a.359.359 0 0 0 .198-.048.327.327 0 0 0 .129-.282.288.288 0 0 0-.12-.26.402.402 0 0 0-.313-.077c-.23.03-.37.161-.31.34.06.181.184.306.416.327z"/></svg></a>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section class="section" id="works">
+  <div class="section-inner">
+    <div class="section-tag">✦ Works</div>
+    <h2 class="section-title">做过的玩意儿</h2>
+    <p class="section-sub">一些画过的图、写过的代码、折腾过的项目。</p>
+    <div class="works-grid" id="worksGrid">
+      <div class="work-card"><div class="work-thumb">🎨</div><div class="work-info"><h3>像素头像集</h3><p>一套 16×16 像素风的 Q 版头像系列，画了 20+ 只。</p><div class="work-tags"><span class="work-tag">像素</span><span class="work-tag">Aseprite</span></div></div></div>
+      <div class="work-card"><div class="work-thumb">💻</div><div class="work-info"><h3>Orbit 项目页</h3><p>一个编辑主义风格的 SaaS 着陆页，纯手工排版。</p><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">GSAP</span></div></div></div>
+      <div class="work-card"><div class="work-thumb">🎵</div><div class="work-info"><h3>Miku 同人曲</h3><p>用 VOCALOID 编的一首 synthwave 翻调，B站 5w 播放。</p><div class="work-tags"><span class="work-tag">VOCALOID</span><span class="work-tag">音乐</span></div></div></div>
+      <div class="work-card"><div class="work-thumb">🧩</div><div class="work-info"><h3>n8n 节点包</h3><p>开发了几个自定义 n8n 节点，用于对接国内常用 API 和服务。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">Node.js</span></div></div></div>
+      <div class="work-card"><div class="work-thumb">📦</div><div class="work-info"><h3>CLI 小工具</h3><p>一个用 Rust 写的文件批量重命名工具，开源在 GitHub。</p><div class="work-tags"><span class="work-tag">Rust</span><span class="work-tag">CLI</span></div></div></div>
+      <div class="work-card"><div class="work-thumb">🔄</div><div class="work-info"><h3>自动化工坊</h3><p>一套 n8n 工作流模板集，涵盖数据处理、通知推送、API 编排等场景。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">自动化</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MUSIC -->
+<section class="section" id="music">
+  <div class="section-inner">
+    <div class="section-tag">♪ Music</div>
+    <h2 class="section-title">最近在听</h2>
+    <p class="section-sub">写代码时不听歌会死星人。</p>
+    <div class="player-wrap">
+      <div class="player-box" id="playerBox">
+        <div class="player-cover" id="playerCover"><img class="cover-img" id="coverImg" src="bgm/cover01.jpg" alt="封面"></div>
+        <div class="player-song" id="playerSong">Places</div>
+        <div class="player-artist" id="playerArtist">ElyOtto</div>
+        <div class="player-controls">
+          <button class="player-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 18L5 12l6-6"/><path d="M19 18V6"/></svg></button>
+          <button class="player-btn pp" id="playBtn"><svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg></button>
+          <button class="player-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 18l6-6-6-6"/><path d="M5 18V6"/></svg></button>
+        </div>
+        <div class="player-progress"><div class="player-progress-bar" id="progressBar"></div></div>
+        <div class="player-time"><span id="currentTime">0:00</span><span id="totalTime">3:30</span></div>
+      </div>
+      <div class="player-playlist" id="playlist">
+        <div class="playlist-item active" data-idx="0"><span class="playlist-num">01</span><div class="playlist-info"><span class="name">NIGHT DANCER</span><span class="artist">imase</span></div><span class="playlist-dur">—</span></div>
+        <div class="playlist-item" data-idx="1"><span class="playlist-num">02</span><div class="playlist-info"><span class="name">One Last Kiss</span><span class="artist">宇多田ヒカル</span></div><span class="playlist-dur">—</span></div>
+        <div class="playlist-item" data-idx="2"><span class="playlist-num">03</span><div class="playlist-info"><span class="name">Yellow</span><span class="artist">电鸟个灯泡</span></div><span class="playlist-dur">—</span></div>
+        <div class="playlist-item" data-idx="3"><span class="playlist-num">04</span><div class="playlist-info"><span class="name">恋</span><span class="artist">星野源</span></div><span class="playlist-dur">—</span></div>
+        <div class="playlist-item" data-idx="4"><span class="playlist-num">05</span><div class="playlist-info"><span class="name">春を告げる</span><span class="artist">yama</span></div><span class="playlist-dur">—</span></div>
+      </div>
+      <div class="player-volume">
+        <label class="vol-label">🔊</label>
+        <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="60">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNAL -->
+<section class="section" id="journal">
+  <div class="section-inner">
+    <div class="section-tag">💬 Journal</div>
+    <h2 class="section-title">碎碎念</h2>
+    <p class="section-sub">一些有的没的。</p>
+    <div class="journal-list" id="journalList">
+      <div class="journal-item"><div class="journal-date">2026.06.18</div><div class="journal-text">搞了一下午个人站，终于把音乐播放器调好了。虚空听歌也是一种享受 🎧</div></div>
+      <div class="journal-item"><div class="journal-date">2026.06.16</div><div class="journal-text">又看了一遍《孤独摇滚》，波奇酱真的太可爱了……什么时候我也能像她一样弹吉他啊 🎸</div></div>
+      <div class="journal-item"><div class="journal-date">2026.06.14</div><div class="journal-text">今天摸鱼摸了一天，罪恶感满满，但真的好快乐（逃</div></div>
+      <div class="journal-item"><div class="journal-date">2026.06.12</div><div class="journal-text">把桌面换成了深夜蓝 + 薄荷绿的配色，写代码的心情都变好了。强迫症满足了。</div></div>
+      <div class="journal-item"><div class="journal-date">2026.06.10</div><div class="journal-text">Muse Dash 又更新了，新曲包好听到炸！我永远喜欢音游！✨</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="section-tag">✦ About</div>
+    <h2 class="section-title">关于我</h2>
+    <p class="section-sub">一个在代码与流程之间反复横跳的人。</p>
+    <div class="about-grid">
+      <div class="about-left">
+        <p>你好，我是 <strong>氿肆</strong>。一个普通的开发者 / 自动化爱好者 / 音游人 / 二次元。</p>
+        <p>白天写 n8n 工作流，晚上折腾各种自动化脚本。偶尔编编曲，偶尔打打音游。喜欢把重复的事情交给机器，自己腾出手来摸鱼。</p>
+        <p>这个站是我自己瞎折腾的，会不定期更新。</p>
+        <div class="skills-section">
+          <h4>✧ 在玩的</h4>
+          <div class="skill-tags">
+            <span class="skill-tag">n8n</span><span class="skill-tag">Node.js</span><span class="skill-tag">React</span>
+            <span class="skill-tag">Python</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">Docker</span>
+            <span class="skill-tag">VOCALOID</span><span class="skill-tag">FL Studio</span>
+          </div>
+          <h4>✧ 在追的</h4>
+          <div class="skill-tags">
+            <span class="skill-tag">孤独摇滚</span><span class="skill-tag">MyGO</span>
+            <span class="skill-tag">赛博朋克</span><span class="skill-tag">边缘行者</span>
+            <span class="skill-tag">间谍过家家</span>
+          </div>
+          <h4>✧ 在玩的</h4>
+          <div class="skill-tags">
+            <span class="skill-tag">Muse Dash</span><span class="skill-tag">Arcaea</span>
+            <span class="skill-tag">星露谷</span><span class="skill-tag">Splatoon 3</span>
+            <span class="skill-tag">Zelda</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="about-stat"><div class="about-stat-icon">🎂</div><div class="about-stat-info"><div class="label">生日</div><div class="val">5 月 12 日</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">📍</div><div class="about-stat-info"><div class="label">常驻</div><div class="val">中国 · 杭州</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">💼</div><div class="about-stat-info"><div class="label">职业</div><div class="val">自动化 / 前端开发</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">🎵</div><div class="about-stat-info"><div class="label">最近循环</div><div class="val">NIGHT DANCER - imase</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">🎮</div><div class="about-stat-info"><div class="label">时长最久</div><div class="val">Splatoon 3 · 600h+</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>✦ 氿肆 · <span class="footer-heart">♥</span> since 2026</p>
+  <p style="margin-top:4px;font-size:.72rem">不赶什么浪潮，也不搭什么船，我自己有海。</p>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ─── Floating stars ───
+const starC = document.getElementById('stars');
+const ss = ['✦','✧','⋆','✶','⁕'];
+for(let i=0;i<25;i++){
+  const s=document.createElement('span');s.className='star';
+  s.textContent=ss[i%ss.length];
+  s.style.left=Math.random()*95+'%';s.style.top=Math.random()*95+'%';
+  s.style.fontSize=(.6+Math.random()*1.4)+'rem';s.style.opacity=.15+Math.random()*.25;
+  starC.appendChild(s);
+}
+gsap.utils.toArray('.star').forEach(s=>{
+  gsap.to(s,{y:'random(-25,25)',x:'random(-15,15)',opacity:'random(.1,.35)',rotation:'random(-10,10)',duration:'random(4,7)',repeat:-1,yoyo:1,ease:'sine.inOut',delay:Math.random()*3});
+});
+
+// ─── Music notes ───
+const nC=document.getElementById('musicNotes');const nn=['♩','♪','♫','♬'];
+for(let i=0;i<8;i++){const n=document.createElement('span');n.className='music-note-f';n.textContent=nn[i%nn.length];n.style.left=Math.random()*90+'%';n.style.top=Math.random()*90+'%';n.style.fontSize=(.7+Math.random()*1)+'rem';nC.appendChild(n);}
+gsap.utils.toArray('.music-note-f').forEach(n=>{gsap.to(n,{y:-50,opacity:0,duration:'random(8,14)',repeat:-1,ease:'none',delay:Math.random()*6});});
+
+// ─── Hero entrance ───
+const heroTL=gsap.timeline({defaults:{ease:'back.out(1.7)'}});
+heroTL
+  .from('.avatar-frame',{scale:0.5,rotation:-10,opacity:0,duration:1.2,ease:'elastic.out(1,.5)'})
+  .from('.ruby',{y:20,opacity:0,duration:.5},'-=.4')
+  .from('.name',{y:30,opacity:0,duration:.5},'-=.3')
+  .from('.tagline',{y:20,opacity:0,duration:.4},'-=.2')
+  .from('.socials',{y:20,opacity:0,duration:.4},'-=.1');
+
+// ─── Hero petal hover ───
+const petalEmojis=['🌸','✨','💫','🌸'];
+const af=document.getElementById('avatarFrame');
+petalEmojis.forEach((p,i)=>{const e=document.createElement('span');e.className='petal';e.textContent=p;const a=i/petalEmojis.length*Math.PI*2;e.style.left=(100+Math.cos(a)*130)+'px';e.style.top=(100+Math.sin(a)*130)+'px';e.style.transform='translate(-50%,-50%)';af.appendChild(e);});
+af.addEventListener('mouseenter',()=>{gsap.utils.toArray('.petal').forEach((p,i)=>{gsap.to(p,{opacity:.7,y:-22,duration:.4,delay:i*.08,ease:'power2.out'})})});
+af.addEventListener('mouseleave',()=>{gsap.utils.toArray('.petal').forEach(p=>{gsap.to(p,{opacity:0,y:0,duration:.3})})});
+
+// ─── Section reveals ───
+// Works
+gsap.from('.works-grid',{y:40,opacity:0,duration:.7,scrollTrigger:{trigger:'#works',start:'top 75%'}});
+gsap.utils.toArray('.work-card').forEach((c,i)=>{gsap.from(c,{y:30,opacity:0,duration:.5,delay:i*.08,scrollTrigger:{trigger:c,start:'top 85%',toggleActions:'play none none reverse'}})});
+
+// Music
+gsap.from('.player-box',{y:40,opacity:0,scale:.95,duration:.7,scrollTrigger:{trigger:'#music',start:'top 75%'}});
+gsap.from('.playlist-item',{x:-20,opacity:0,duration:.4,stagger:.08,scrollTrigger:{trigger:'#playlist',start:'top 80%'}});
+
+// Journal
+gsap.utils.toArray('.journal-item').forEach((j,i)=>{gsap.from(j,{y:25,opacity:0,duration:.5,delay:i*.08,scrollTrigger:{trigger:j,start:'top 85%',toggleActions:'play none none reverse'}})});
+
+// About
+gsap.from('.about-grid',{y:30,opacity:0,duration:.6,scrollTrigger:{trigger:'#about',start:'top 75%'}});
+gsap.utils.toArray('.about-stat').forEach((s,i)=>{gsap.from(s,{x:-20,opacity:0,duration:.4,delay:i*.08,scrollTrigger:{trigger:s,start:'top 85%'}})});
+
+// ─── Music Player (multi-song + visualizer) ───
+const $=(s)=>document.querySelector(s);
+const playlistData=[
+  {file:'bgm/01.mp3', cover:'bgm/cover01.jpg', song:'NIGHT DANCER', artist:'imase'},
+  {file:'bgm/02.mp3', cover:'bgm/cover02.jpg', song:'One Last Kiss', artist:'宇多田ヒカル'},
+  {file:'bgm/03.mp3', cover:'bgm/cover03.jpg', song:'Yellow', artist:'电鸟个灯泡'},
+  {file:'bgm/04.mp3', cover:'bgm/cover04.jpg', song:'恋', artist:'星野源'},
+  {file:'bgm/05.mp3', cover:'bgm/cover05.jpg', song:'春を告げる', artist:'yama'},
+];
+let curIdx=0,songList=[];
+const audio=new Audio();audio.volume=0.6;
+let isPlaying=false;
+
+const playerBox=$('#playerBox'),coverImg=$('#coverImg'),songEl=$('#playerSong'),artistEl=$('#playerArtist');
+const playBtn=$('#playBtn'),playIcon=$('#playIcon'),prevBtn=$('#prevBtn'),nextBtn=$('#nextBtn');
+const progressBar=$('#progressBar'),curTime=$('#currentTime'),totalTime=$('#totalTime');
+const volSlider=$('#volSlider');
+const playerProgress=$('.player-progress');
+const vizCanvas=$('#heroViz');
+const vizCtx=vizCanvas.getContext('2d');
+
+// ─── Audio graph & visualizer ───
+let audioCtx,analyser,dataArray,vizSetup=false;
+let ambientTime=0;
+function initViz(){
+  if(vizSetup)return;
+  try{
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    analyser=audioCtx.createAnalyser();
+    analyser.fftSize=256;
+    const src=audioCtx.createMediaElementSource(audio);
+    src.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    dataArray=new Uint8Array(analyser.frequencyBinCount);
+    vizSetup=true;
+    drawViz();
+  }catch(e){console.warn('Viz init failed',e)}
+}
+function drawViz(){
+  requestAnimationFrame(drawViz);
+  vizCtx.clearRect(0,0,vizCanvas.width,vizCanvas.height);
+  const bars=64,w=vizCanvas.width/bars,h=vizCanvas.height;
+  if(isPlaying&&analyser){
+    analyser.getByteFrequencyData(dataArray);
+    const step=Math.floor(dataArray.length/bars);
+    for(let i=0;i<bars;i++){
+      const val=dataArray[i*step]||0;
+      const bh=Math.max(2,(val/255)*h*0.7);
+      const x=i*w+1,y=h-bh-2,rx=Math.max(1,w-2);
+      const t=val/255;
+      const R=Math.round(140+t*50),G=Math.round(175+t*35),B=Math.round(195-t*30);
+      vizCtx.fillStyle=`rgba(${R},${G},${B},${0.1+0.35*t})`;
+      vizCtx.beginPath();vizCtx.roundRect(x,y,rx,bh,[1,1,0,0]);vizCtx.fill();
+    }
+  }else{
+    ambientTime+=0.015;
+    for(let i=0;i<bars;i++){
+      const breathe=Math.sin(ambientTime+i*0.3)*0.5+0.5;
+      const bh=Math.max(1,breathe*h*0.12);
+      const x=i*w+1,y=h-bh-2,rx=Math.max(1,w-2);
+      vizCtx.fillStyle=`rgba(165,185,200,${0.03+0.06*breathe})`;
+      vizCtx.beginPath();vizCtx.roundRect(x,y,rx,bh,[1,1,0,0]);vizCtx.fill();
+    }
+  }
+}
+
+function startPlayback(){
+  if(!vizSetup)initViz();
+  if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
+  audio.play().then(()=>{
+    isPlaying=true;playerBox.classList.add('playing');
+    playIcon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  }).catch(()=>{});
+}
+
+// ─── Init & autoplay ───
+songList=playlistData;
+loadTrack(0);
+initViz();
+
+let autoplayAttempted=false;
+function tryAutoplay(){
+  if(autoplayAttempted)return;
+  autoplayAttempted=true;
+  if(!vizSetup)initViz();
+  if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
+  audio.play().then(()=>{
+    isPlaying=true;playerBox.classList.add('playing');
+    playIcon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  }).catch(()=>{
+    // Autoplay blocked — show hint, play on first interaction
+    const hint=document.createElement('div');
+    hint.id='playHint';
+    hint.style.cssText='position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(248,246,243,0);transition:all .5s';
+    hint.innerHTML=`
+      <div style="text-align:center;animation:pulse-hint 2s ease-in-out infinite">
+        <div style="font-size:3rem;margin-bottom:8px;opacity:.5">🎵</div>
+        <div style="font-family:Nunito,sans-serif;font-size:1rem;font-weight:600;color:rgba(45,42,56,.4);letter-spacing:.06em">点一下开始</div>
+      </div>`;
+    const style=document.createElement('style');
+    style.textContent='@keyframes pulse-hint{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}';
+    document.head.appendChild(style);
+    document.body.appendChild(hint);
+    hint.addEventListener('click',()=>{
+      hint.remove();startPlayback();
+    },{once:true});
+  });
+}
+
+// Load after page is ready
+if(document.readyState==='complete')tryAutoplay();
+else window.addEventListener('load',tryAutoplay);
+
+function loadTrack(i){
+   if(!songList[i])return;
+   curIdx=i;const t=songList[i];
+   audio.src=t.file;audio.load();
+   songEl.textContent=t.song;artistEl.textContent=t.artist;
+   if(t.cover)coverImg.src=t.cover;
+   progressBar.style.width='0%';curTime.textContent='0:00';totalTime.textContent='--:--';
+  document.querySelector('.playlist-item.active')?.classList.remove('active');
+  const item=document.querySelector(`.playlist-item[data-idx="${i}"]`);
+  if(item)item.classList.add('active');
+}
+
+audio.addEventListener('loadedmetadata',()=>{totalTime.textContent=formatTime(audio.duration)});
+audio.addEventListener('timeupdate',()=>{
+  if(audio.duration){
+    progressBar.style.width=(audio.currentTime/audio.duration*100)+'%';
+    curTime.textContent=formatTime(audio.currentTime);
+  }
+});
+audio.addEventListener('ended',()=>{next()});
+
+function formatTime(s){if(!s||!isFinite(s))return'0:00';const m=Math.floor(s/60);return m+':'+String(Math.floor(s%60)).padStart(2,'0')}
+function togglePlay(){
+  if(isPlaying){
+    isPlaying=false;audio.pause();playerBox.classList.remove('playing');
+    playIcon.innerHTML='<path d="M5 3l14 9-14 9V3z"/>'
+  }else{
+    startPlayback();
+  }
+}
+function next(){const wasPlaying=isPlaying;if(isPlaying){audio.pause();isPlaying=false}loadTrack((curIdx+1)%songList.length);if(wasPlaying){audio.play().catch(()=>{});isPlaying=true;playerBox.classList.add('playing');playIcon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'}}
+function prev(){const wasPlaying=isPlaying;if(isPlaying){audio.pause();isPlaying=false}loadTrack((curIdx-1+songList.length)%songList.length);if(wasPlaying){audio.play().catch(()=>{});isPlaying=true;playerBox.classList.add('playing');playIcon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'}}
+function seek(e){const r=playerProgress.getBoundingClientRect();const p=(e.clientX-r.left)/r.width;if(audio.duration)audio.currentTime=p*audio.duration}
+playerProgress.addEventListener('click',seek);
+playBtn.addEventListener('click',togglePlay);
+prevBtn.addEventListener('click',prev);
+nextBtn.addEventListener('click',next);
+volSlider.addEventListener('input',()=>{audio.volume=volSlider.value/100;volSlider.previousElementSibling.textContent=audio.volume<.1?'🔇':'🔊'});
+document.querySelectorAll('.playlist-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    const wasPlaying=isPlaying;
+    if(isPlaying){audio.pause();isPlaying=false}
+    loadTrack(parseInt(item.dataset.idx));
+    if(wasPlaying){audio.play().catch(()=>{});isPlaying=true;playerBox.classList.add('playing');playIcon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'}
+  });
+});
+
+// ─── Cursor glow ───
+const glow=document.createElement('div');
+glow.style.cssText='position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(165,200,175,.06) 0%,transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:opacity .3s';
+glow.style.opacity='0';
+document.body.appendChild(glow);
+document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';glow.style.opacity='1'});
+document.addEventListener('mouseleave',()=>{glow.style.opacity='0'});
+
+// ─── Smooth nav ───
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});});
+});
+</script>
+</body>
+</html>
