@@ -11,7 +11,57 @@
 - 项目目录：`/www/solo_app`
 - Git 仓库：`https://github.com/chenjiuxuan/solo_app.git`
 - 当前部署来源：`origin/master`
-- 最近部署提交：`9789246 chore: update personal site content`
+- 最近部署提交：`a6660de fix: support deployed music playback and search docs`
+
+## 音频资源
+
+`bgm/*.mp3` 体积较大，已在 `.gitignore` 中排除，不会跟随 GitHub 部署。
+
+当前线上音频文件需要手动保存在：
+
+```text
+/www/solo_app/bgm/01.mp3
+/www/solo_app/bgm/02.mp3
+/www/solo_app/bgm/03.mp3
+/www/solo_app/bgm/04.mp3
+/www/solo_app/bgm/05.mp3
+```
+
+如果重新部署到新机器，除了 `git clone`，还需要额外上传本地 `bgm/*.mp3`：
+
+```bash
+scp bgm/*.mp3 root@43.173.101.88:/www/solo_app/bgm/
+```
+
+验证音频是否可播放：
+
+```bash
+curl -I -H "Range: bytes=0-1023" http://43.173.101.88/bgm/01.mp3
+```
+
+正常应返回 `206 Partial Content` 和 `Content-Type: audio/mpeg`。
+
+## 网易云搜索
+
+线上搜索接口：
+
+```text
+/api/netease/search
+```
+
+服务器环境访问 `https://music.163.com/api/search/get/web` 会返回加密字符串，无法直接解析。因此当前后端使用：
+
+```text
+https://music.163.com/api/cloudsearch/pc
+```
+
+验证：
+
+```bash
+curl "http://43.173.101.88/api/netease/search?keywords=%E6%9D%8E%E7%99%BD&limit=3"
+```
+
+搜索结果会尽量过滤出可播放歌曲。部分版权歌曲仍可能无法播放，这是网易云上游限制。
 
 ## 运行结构
 
