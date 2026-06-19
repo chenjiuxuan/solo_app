@@ -1,4 +1,5 @@
 ﻿import express from 'express';
+import compression from 'compression';
 import dotenv from 'dotenv';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -192,6 +193,7 @@ async function fetchGithubEvents() {
 }
 
 const app = express();
+app.use(compression());
 app.use(express.json({ limit: '1mb' }));
 
 
@@ -366,14 +368,21 @@ app.get('/api/netease/audio', async (req, res) => {
     if (audioResponse.body) {
       const reader = audioResponse.body.getReader();
       const pump = async () => {
-        const { done, value } = await reader.read();
-        if (done) {
-          res.end();
-          return;
+        try {
+          const { done, value } = await reader.read();
+          if (done) {
+            if (!res.writableEnded) res.end();
+            return;
+          }
+          res.write(Buffer.from(value), pump);
+        } catch {
+          try { reader.cancel(); } catch {}
+          if (!res.writableEnded) res.end();
         }
-        res.write(Buffer.from(value), pump);
       };
-      pump();
+      pump().catch(() => {
+        if (!res.writableEnded) res.end();
+      });
     } else {
       res.end();
     }
@@ -382,7 +391,14 @@ app.get('/api/netease/audio', async (req, res) => {
   }
 });
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, {
+  maxAge: '7d',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
 
 app.listen(port, '127.0.0.1', () => {
   console.log(`Solo app is running at http://127.0.0.1:${port}`);

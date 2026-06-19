@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Nunito:wght@600;700;800;900&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/gsap@3.12.7/dist/gsap.min.js"></script>
-<script src="https://unpkg.com/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<link rel="preload" as="image" href="assets/avatar.jpg">
+<link rel="preload" as="image" href="bgm/cover01.jpg">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -460,7 +460,7 @@ nav{
 }
 .timeline-item:hover{border-color:rgba(165,200,175,.35);background:rgba(255,255,255,.55)}
 .timeline-item::before{
-  content:'';position:absolute;left:-22px;top:20px;
+  content:'';position:absolute;left:-25.5px;top:18px;
   width:10px;height:10px;border-radius:50%;
   background:rgba(165,200,175,.5);
   border:2px solid #f8f6f3;
@@ -721,7 +721,8 @@ footer p{
           <div class="skill-tags">
             <span class="skill-tag">n8n</span><span class="skill-tag">Node.js</span><span class="skill-tag">React</span>
             <span class="skill-tag">Python</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">Docker</span>
-            <span class="skill-tag">VOCALOID</span><span class="skill-tag">FL Studio</span>
+
+
           </div>
           <h4>✧ 在追的</h4>
           <div class="skill-tags">
@@ -754,6 +755,8 @@ footer p{
   <p style="margin-top:4px;font-size:.72rem">不赶什么浪潮，也不搭什么船，我自己有海。</p>
 </footer>
 
+<script src="/vendor/gsap.min.js"></script>
+<script src="/vendor/ScrollTrigger.min.js"></script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
@@ -835,7 +838,7 @@ const playlistData=[
   {source:'local',file:'bgm/04.mp3', cover:'bgm/cover04.jpg', song:'花', artist:'藤井风'},
   {source:'local',file:'bgm/05.mp3', cover:'bgm/cover05.jpg', song:'春を告げる', artist:'yama'},
 ];
-let curIdx=0,songList=[],playlists=[],activePlaylistId='favorites',lyricLines=[],lastLyricActive=-1;
+let curIdx=0,songList=[],lyricLines=[],lastLyricActive=-1;
 const audio=new Audio();audio.volume=0.6;
 let isPlaying=false;
 
@@ -850,32 +853,11 @@ playerStatus.className='mf-status';
 musicBar.appendChild(playerStatus);
 
 function toTrack(song){return {source:'netease',id:song.id,song:song.name,artist:song.artist||'未知歌手',album:song.album||'',duration:song.duration||0,fee:song.fee}}
-function getActivePlaylist(){return playlists.find(p=>p.id===activePlaylistId)||playlists[0]}
 function setPlayIconPlaying(playing){playIcon.innerHTML=playing?'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>':'<path d="M5 3l14 9-14 9V3z"/>'}
 
 function renderLocalList(){
   localList.innerHTML=playlistData.map((t,i)=>`<button class="mf-item ${songList===playlistData&&i===curIdx?'active':''}" data-local-idx="${i}"><span class="mf-item-index">${String(i+1).padStart(2,'0')}</span><span class="mf-item-info"><span class="mf-item-title">${t.song}</span><span class="mf-item-sub">${t.artist}</span></span></button>`).join('');
   localList.querySelectorAll('[data-local-idx]').forEach(btn=>btn.addEventListener('click',()=>{const wasPlaying=isPlaying;if(isPlaying)audio.pause();songList=playlistData;loadTrack(Number(btn.dataset.localIdx));if(wasPlaying)startPlayback()}));
-}
-
-async function loadPlaylists(){
-  playlists=[];
-}
-async function savePlaylists(){
-  playlists=[];
-}
-function renderPlaylists(){
-  return;
-  playlistTabs.innerHTML=playlists.map(p=>`<button class="mf-playlist-tab ${p.id===activePlaylistId?'active':''}" data-playlist-id="${p.id}">${p.name}</button>`).join('');
-  playlistTabs.querySelectorAll('[data-playlist-id]').forEach(btn=>btn.addEventListener('click',()=>{activePlaylistId=btn.dataset.playlistId;renderPlaylists()}));
-  const active=getActivePlaylist();
-  const songs=active?.songs||[];
-  savedSongs.innerHTML=songs.length?songs.map((song,i)=>`<div class="mf-item-row ${songList===songs&&i===curIdx?'active':''}"><button class="mf-item" data-saved-idx="${i}"><span class="mf-item-index">${String(i+1).padStart(2,'0')}</span><span class="mf-item-info"><span class="mf-item-title">${song.name}</span><span class="mf-item-sub">${song.artist||'未知歌手'}</span></span></button><button class="mf-item-del" data-del-id="${song.id}" title="移除">×</button></div>`).join(''):'<div class="mf-empty">这里还没有收藏歌曲</div>';
-  savedSongs.querySelectorAll('[data-saved-idx]').forEach(btn=>btn.addEventListener('click',()=>{const wasPlaying=isPlaying;if(isPlaying)audio.pause();songList=songs.map(toTrack);loadTrack(Number(btn.dataset.savedIdx));if(wasPlaying)startPlayback()}));
-  savedSongs.querySelectorAll('[data-del-id]').forEach(btn=>btn.addEventListener('click',(e)=>{e.stopPropagation();active.songs=active.songs.filter(s=>String(s.id)!==String(btn.dataset.delId));savePlaylists()}));
-}
-function addSongToPlaylist(song){
-  searchStatus.textContent='公开站点已关闭共享歌单收藏';
 }
 
 function parseLrc(text){
@@ -958,7 +940,9 @@ function initViz(){
     if(!vizFrame)drawViz();
   }catch(e){console.warn('Viz init failed',e)}
 }
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&vizSetup&&!vizFrame)drawViz()});
 function drawViz(){
+  if(document.hidden){vizFrame=0;return}
   vizFrame=requestAnimationFrame(drawViz);
   const rect=barWave.getBoundingClientRect();
   const dpr=window.devicePixelRatio||1;
@@ -1057,7 +1041,7 @@ function loadTrack(i){
   if(miniCoverImg)miniCoverImg.src=coverImg.src;
   curTime.textContent='0:00';totalTime.textContent='--:--';progressFill.style.width='0%';
   playerStatus.textContent='';
-  loadLyrics(t);renderLocalList();renderPlaylists();
+  loadLyrics(t);renderLocalList();
 }
 function formatTime(s){if(!s||!isFinite(s))return'0:00';const m=Math.floor(s/60);return m+':'+String(Math.floor(s%60)).padStart(2,'0')}
 function togglePlay(){if(isPlaying){isPlaying=false;audio.pause();musicBar.classList.remove('playing');setPlayIconPlaying(false)}else startPlayback()}
@@ -1073,7 +1057,7 @@ audio.addEventListener('ended',()=>{next()});
 progressTrack.addEventListener('click',seek);playBtn.addEventListener('click',togglePlay);prevBtn.addEventListener('click',prev);nextBtn.addEventListener('click',next);
 volSlider.addEventListener('input',()=>{audio.volume=volSlider.value/100;volSlider.previousElementSibling.textContent=audio.volume<.1?'静音':'音量'});
 
-songList=playlistData;renderLocalList();loadTrack(0);initViz();loadPlaylists();
+songList=playlistData;renderLocalList();loadTrack(0);initViz();
 let firstInteractionAutoplayDone=false;
 function tryAutoplayAfterInteraction(e){
   if(firstInteractionAutoplayDone||isPlaying)return;
