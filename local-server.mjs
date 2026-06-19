@@ -153,9 +153,11 @@ function commitToEvent(repo, commit) {
 
 function mergeGithubEvents(events, commitEvents) {
   const visibleTypes = new Set(['PushEvent', 'PullRequestEvent', 'IssuesEvent', 'CreateEvent', 'PublicEvent']);
+  const commitShas = new Set(commitEvents.map((event) => event.payload?.commits?.[0]?.sha).filter(Boolean));
   const byKey = new Map();
   for (const event of [...commitEvents, ...events]) {
     if (!visibleTypes.has(event.type)) continue;
+    if (event.type === 'PushEvent' && event.payload?.head && commitShas.has(event.payload.head)) continue;
     const key = event.id || event.type + ':' + event.repo?.name + ':' + event.created_at;
     if (!byKey.has(key)) byKey.set(key, event);
   }
@@ -178,6 +180,7 @@ async function fetchGithubEvents() {
     }));
     const commitEvents = commitResults.flat();
     const events = mergeGithubEvents(userEvents, commitEvents);
+    if (!events.length) throw new Error('GitHub returned no displayable events');
 
     githubEventsCache.events = events;
     githubEventsCache.fetchedAt = Date.now();
