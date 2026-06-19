@@ -987,10 +987,11 @@ function drawViz(){
   }
   barCtx.shadowBlur=0;
 }
-function startPlayback(){
+function startPlayback(options={}){
+  const silentFailure=Boolean(options.silentFailure);
   if(!vizSetup)initViz();if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
   playerStatus.textContent='';
-  audio.play().then(()=>{isPlaying=true;musicBar.classList.add('playing');setPlayIconPlaying(true)}).catch((e)=>{isPlaying=false;musicBar.classList.remove('playing');setPlayIconPlaying(false);playerStatus.textContent='播放失败，可能是浏览器限制或歌曲暂无版权';console.warn('播放失败',e)});
+  return audio.play().then(()=>{isPlaying=true;musicBar.classList.add('playing');setPlayIconPlaying(true)}).catch((e)=>{isPlaying=false;musicBar.classList.remove('playing');setPlayIconPlaying(false);if(!silentFailure)playerStatus.textContent='播放失败，可能是浏览器限制或歌曲暂无版权';console.warn('播放失败',e)});
 }
 function loadTrack(i){
   if(!songList[i])return;curIdx=i;const t=songList[i];
@@ -1016,9 +1017,22 @@ progressTrack.addEventListener('click',seek);playBtn.addEventListener('click',to
 volSlider.addEventListener('input',()=>{audio.volume=volSlider.value/100;volSlider.previousElementSibling.textContent=audio.volume<.1?'静音':'音量'});
 
 songList=playlistData;renderLocalList();loadTrack(0);initViz();loadPlaylists();
-let autoplayAttempted=false;
-function tryAutoplay(){if(autoplayAttempted)return;autoplayAttempted=true;if(!vizSetup)initViz();if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();audio.play().then(()=>{isPlaying=true;musicBar.classList.add('playing');setPlayIconPlaying(true)}).catch(()=>{})}
-if(document.readyState==='complete')tryAutoplay();else window.addEventListener('load',tryAutoplay);
+let firstInteractionAutoplayDone=false;
+function tryAutoplayAfterInteraction(e){
+  if(firstInteractionAutoplayDone||isPlaying)return;
+  if(e?.target?.closest?.('#musicBar,#musicPanel,button,a,input,textarea,select'))return;
+  firstInteractionAutoplayDone=true;
+  removeFirstInteractionAutoplay();
+  startPlayback({silentFailure:true});
+}
+function removeFirstInteractionAutoplay(){
+  document.removeEventListener('pointerdown',tryAutoplayAfterInteraction);
+  document.removeEventListener('keydown',tryAutoplayAfterInteraction);
+  document.removeEventListener('touchstart',tryAutoplayAfterInteraction);
+}
+document.addEventListener('pointerdown',tryAutoplayAfterInteraction);
+document.addEventListener('keydown',tryAutoplayAfterInteraction);
+document.addEventListener('touchstart',tryAutoplayAfterInteraction,{passive:true});
 
 // 面板展开/收起
 const musicPanel=$('#musicPanel'),mbExpand=$('#mbExpand'),mpClose=$('#mpClose');
