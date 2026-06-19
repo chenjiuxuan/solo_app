@@ -272,7 +272,7 @@ app.get('/api/netease/search', async (req, res) => {
       limit: String(Math.min(resultLimit * 3, 60)),
     });
 
-    const response = await fetch('https://music.163.com/api/search/get/web', {
+    const response = await fetch('https://music.163.com/api/cloudsearch/pc', {
       method: 'POST',
       headers: {
         ...createNeteaseHeaders(),
@@ -288,9 +288,9 @@ app.get('/api/netease/search', async (req, res) => {
     const rawSongs = (data?.result?.songs || []).map((song) => ({
       id: song.id,
       name: song.name,
-      artist: (song.artists || []).map((artist) => artist.name).filter(Boolean).join(' / '),
-      album: song.album?.name || '',
-      duration: song.duration || 0,
+      artist: (song.artists || song.ar || []).map((artist) => artist.name).filter(Boolean).join(' / '),
+      album: song.album?.name || song.al?.name || '',
+      duration: song.duration || song.dt || 0,
       fee: song.fee,
     }));
     const songs = await filterPlayableSongs(rawSongs, resultLimit);
