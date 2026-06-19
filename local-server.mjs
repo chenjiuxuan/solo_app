@@ -105,7 +105,7 @@ async function readGithubEventsFile() {
   try {
     const raw = await fs.readFile(githubEventsPath, 'utf8');
     const data = JSON.parse(raw);
-    if (!Array.isArray(data.events)) return null;
+    if (!Array.isArray(data.events) || data.events.length === 0) return null;
     return data;
   } catch {
     return null;
