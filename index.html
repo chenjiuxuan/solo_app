@@ -218,11 +218,13 @@ nav{
 /* ─── Bottom Music Bar ─── */
 .music-bar{
   position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:24px;right:auto;z-index:200;
-  width:58px;height:58px;color:#fff;
-  background:linear-gradient(155deg,rgba(18,105,205,.78),rgba(18,155,198,.58) 62%,rgba(122,202,190,.42));
+  width:58px;height:58px;color:#2d2a38;
+  background:
+    radial-gradient(circle at 18% 14%,rgba(255,255,255,.74),transparent 44%),
+    linear-gradient(155deg,rgba(248,250,246,.86),rgba(198,226,210,.7) 48%,rgba(230,223,238,.58));
   backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
-  border:1px solid rgba(255,255,255,.24);border-radius:18px;
-  box-shadow:0 20px 56px rgba(34,92,150,.18),inset 0 1px 0 rgba(255,255,255,.2);
+  border:1px solid rgba(159,194,172,.38);border-radius:18px;
+  box-shadow:0 20px 54px rgba(110,150,120,.14),inset 0 1px 0 rgba(255,255,255,.66);
   isolation:isolate;cursor:pointer;
   transition:width .34s cubic-bezier(.34,1.56,.64,1),height .34s cubic-bezier(.34,1.56,.64,1),border-radius .28s ease,box-shadow .28s ease;
 }
@@ -232,17 +234,17 @@ nav{
 .music-pop-trigger{
   position:absolute;top:0;left:0;width:58px;height:58px;z-index:2;
   display:flex;align-items:center;justify-content:center;
-  border:none;background:transparent;color:#fff;cursor:pointer;
+  border:none;background:transparent;color:#5f8f78;cursor:pointer;
   transition:opacity .18s ease,transform .24s cubic-bezier(.34,1.56,.64,1);
 }
 .music-pop-cover{
   width:42px;height:42px;border-radius:13px;object-fit:cover;display:block;
-  box-shadow:0 8px 18px rgba(0,42,94,.22),0 0 0 1px rgba(255,255,255,.28);
+  box-shadow:0 8px 18px rgba(76,108,96,.18),0 0 0 1px rgba(255,255,255,.42);
 }
 .music-pop-trigger svg{
   position:absolute;right:9px;bottom:9px;width:16px;height:16px;
-  padding:3px;border-radius:50%;background:rgba(255,255,255,.82);color:#156ab6;
-  box-shadow:0 4px 12px rgba(0,52,118,.16);
+  padding:3px;border-radius:50%;background:rgba(255,255,255,.84);color:#5f8f78;
+  box-shadow:0 4px 12px rgba(82,118,100,.14);
 }
 .music-bar.pinned .music-pop-trigger,.music-bar.panel-open .music-pop-trigger{
   opacity:0;transform:scale(.82);pointer-events:none;
@@ -253,11 +255,11 @@ nav{
 }
 .music-progress-track{
   position:relative;top:auto;left:auto;right:auto;width:100%;height:4px;
-  background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden;cursor:pointer;
+  background:rgba(105,142,122,.16);border-radius:999px;overflow:hidden;cursor:pointer;
 }
 .music-progress-fill{
   height:100%;width:0%;
-  background:linear-gradient(90deg,rgba(255,255,255,.96),rgba(168,242,231,.9));
+  background:linear-gradient(90deg,rgba(117,174,148,.82),rgba(190,176,220,.78));
   border-radius:inherit;transition:width .12s linear;
 }
 .music-bar-inner{
@@ -282,49 +284,49 @@ nav{
 .music-bar-left .player-cover{
   width:72px;height:72px;border-radius:18px;overflow:hidden;flex-shrink:0;
   animation:disc-spin 8s linear infinite;animation-play-state:paused;
-  box-shadow:0 12px 28px rgba(0,42,94,.24),0 0 0 1px rgba(255,255,255,.28);
+  box-shadow:0 12px 28px rgba(76,108,96,.2),0 0 0 1px rgba(255,255,255,.44);
 }
 .music-bar.playing .player-cover{animation-play-state:running}
 .music-bar-info{display:flex;flex-direction:column;min-width:0}
 .music-bar-song{
-  font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;color:rgba(255,255,255,.95);
+  font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;color:rgba(45,42,56,.88);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .music-bar-artist{
-  font-size:.7rem;color:rgba(255,255,255,.64);
+  font-size:.7rem;color:rgba(45,42,56,.5);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .music-bar-center{display:flex;align-items:center;gap:8px}
 .music-bar-center .player-btn{
   width:34px;height:34px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.16);
-  color:rgba(255,255,255,.9);cursor:pointer;
+  border:1px solid rgba(113,154,131,.22);background:rgba(255,255,255,.46);
+  color:rgba(45,42,56,.72);cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   transition:all .25s cubic-bezier(.34,1.56,.64,1);
 }
 .music-bar-center .player-btn:hover{
-  transform:scale(1.1);border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.24);
+  transform:scale(1.1);border-color:rgba(117,174,148,.42);background:rgba(255,255,255,.68);
 }
 .music-bar-center .player-btn svg{width:14px;height:14px}
-.music-bar-center .player-btn.pp{width:42px;height:42px;background:rgba(255,255,255,.88);border-color:rgba(255,255,255,.72);color:#156ab6;box-shadow:0 8px 22px rgba(0,52,118,.2)}
+.music-bar-center .player-btn.pp{width:42px;height:42px;background:rgba(255,255,255,.84);border-color:rgba(255,255,255,.7);color:#5f8f78;box-shadow:0 8px 22px rgba(84,118,104,.16)}
 .music-bar-center .player-btn.pp svg{width:18px;height:18px}
 .music-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.mb-time{font-size:.68rem;color:rgba(255,255,255,.68);font-family:'Nunito',sans-serif;min-width:30px;text-align:right}
+.mb-time{font-size:.68rem;color:rgba(45,42,56,.48);font-family:'Nunito',sans-serif;min-width:30px;text-align:right}
 .mb-time-sep{display:none}
 .mb-expand{
   width:30px;height:30px;border-radius:10px;flex:0 0 auto;
-  border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.14);
-  color:rgba(255,255,255,.72);cursor:pointer;
+  border:1px solid rgba(113,154,131,.22);background:rgba(255,255,255,.42);
+  color:rgba(45,42,56,.58);cursor:pointer;
   font-size:.85rem;display:flex;align-items:center;justify-content:center;
   transition:all .2s;
 }
-.mb-expand:hover{background:rgba(255,255,255,.24);color:#fff}
+.mb-expand:hover{background:rgba(255,255,255,.68);color:#5f8f78}
 
 /* volume in bottom bar */
 .music-bar .player-volume{display:flex;align-items:center;gap:4px}
 .music-bar .vol-label{font-size:.65rem;opacity:.7}
-.music-bar .vol-slider{-webkit-appearance:none;appearance:none;width:48px;height:3px;background:rgba(255,255,255,.2);border-radius:3px;outline:none;cursor:pointer}
-.music-bar .vol-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.86);border:2px solid rgba(138,225,215,.55);cursor:pointer;transition:transform .2s}
+.music-bar .vol-slider{-webkit-appearance:none;appearance:none;width:48px;height:3px;background:rgba(105,142,122,.16);border-radius:3px;outline:none;cursor:pointer}
+.music-bar .vol-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.88);border:2px solid rgba(117,174,148,.48);cursor:pointer;transition:transform .2s}
 .music-bar .vol-slider::-webkit-slider-thumb:hover{transform:scale(1.2)}
 
 /* player status toast */
@@ -337,7 +339,7 @@ nav{
   width:360px;max-height:min(480px,calc(100vh - 48px));
   background:rgba(248,246,243,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border:1px solid rgba(165,200,175,.2);border-radius:20px;
-  box-shadow:0 8px 40px rgba(0,0,0,.08);
+  box-shadow:0 8px 40px rgba(110,150,120,.1);
   opacity:0;transform:translateY(12px) scale(.95);pointer-events:none;
   transition:opacity .3s cubic-bezier(.34,1.56,.64,1),transform .3s cubic-bezier(.34,1.56,.64,1);
   overflow:hidden;display:flex;flex-direction:column;
@@ -538,7 +540,6 @@ footer p{
   <a href="#" class="nav-brand">✦ 氿肆</a>
   <div class="nav-links">
     <a href="#works">作品</a>
-    <a href="#music">音乐</a>
     <a href="#journal">动态</a>
     <a href="#about">关于</a>
   </div>
@@ -563,9 +564,7 @@ footer p{
   </p>
   <div class="socials" id="socialsEl">
     <a href="#" class="social-btn" title="Bilibili" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267c.053-.071.116-.142.187-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.142.929.4.267.258.391.569.391.933 0 .364-.133.675-.4.933l-1.174 1.12V4.653zM5.333 7.24c-.746 0-1.373.24-1.88.72-.507.48-.769 1.1-.787 1.86v6.453c0 .773.258 1.422.773 1.947.516.524 1.162.786 1.94.786h13.334c.777 0 1.432-.262 1.966-.786.535-.525.803-1.174.806-1.947V9.82c0-.76-.267-1.38-.8-1.86s-1.138-.72-1.88-.72H5.333zm.427 2.373a.853.853 0 0 0-.587.253.815.815 0 0 0-.24.6v3.174c0 .24.08.44.24.6.16.16.356.24.587.24h1.386c.231 0 .427-.08.587-.24.16-.16.24-.36.24-.6v-3.174c0-.24-.08-.44-.24-.6a.795.795 0 0 0-.587-.253H5.76zm5.12 0a.853.853 0 0 0-.587.253.815.815 0 0 0-.24.6v3.174c0 .24.08.44.24.6.16.16.356.24.587.24h1.386c.231 0 .427-.08.587-.24.16-.16.24-.36.24-.6v-3.174c0-.24-.08-.44-.24-.6a.795.795 0 0 0-.587-.253h-1.386zm5.12 0a.853.853 0 0 0-.587.253.815.815 0 0 0-.24.6v3.174c0 .24.08.44.24.6.16.16.356.24.587.24h1.386c.231 0 .427-.08.587-.24.16-.16.24-.36.24-.6v-3.174c0-.24-.08-.44-.24-.6a.795.795 0 0 0-.587-.253h-1.386z"/></svg></a>
-    <a href="#" class="social-btn" title="GitHub" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
-    <a href="#" class="social-btn" title="Twitter / X" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-    <a href="#" class="social-btn" title="微博" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zm-1.2-7.109c-2.952.39-4.996 2.589-4.562 4.922.434 2.323 3.098 3.891 6.05 3.503 2.951-.39 4.996-2.59 4.562-4.923-.434-2.322-3.098-3.891-6.05-3.5v-.002zM5.49 17.04c-.298.162-.513.39-.482.51.035.12.307.094.643-.051.336-.146.54-.377.507-.5-.031-.112-.293-.097-.668.041zm10.967-1.583c-.29.146-.478.374-.428.506.05.133.324.12.677-.034.353-.154.538-.385.478-.508-.059-.124-.326-.116-.727.036zm-6.69 1.555c-.495.2-.835.476-.78.608.056.13.441.073.907-.13.465-.204.769-.477.712-.61-.058-.13-.362-.081-.839.132zm1.803-.962c-.482.21-.812.505-.74.655.074.151.504.104 1.002-.099.498-.203.796-.513.718-.658-.078-.145-.497-.095-1.016.102h.036zM20.69 7.247a5.483 5.483 0 0 0-4.864-4.105 5.027 5.027 0 0 0-5.002 2.916 5.201 5.201 0 0 0 .918 5.813 4.887 4.887 0 0 0 5.479 1.316c2.44-.902 3.832-3.67 3.47-5.94zm-1.176.755c-.094.48-.46.87-.884.957-.424.087-.92-.18-1.233-.539-.45-.514-.48-1.284-.154-1.789.234-.362.618-.544.999-.505.38.039.817.38.988.851.096.266.114.528.054.75v.275h.23zm-.745.189a.359.359 0 0 0 .198-.048.327.327 0 0 0 .129-.282.288.288 0 0 0-.12-.26.402.402 0 0 0-.313-.077c-.23.03-.37.161-.31.34.06.181.184.306.416.327z"/></svg></a>
+    <a href="https://github.com/chenjiuxuan" class="social-btn" title="GitHub" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
   </div>
 </section>
 
@@ -601,7 +600,7 @@ footer p{
           <span class="music-bar-artist" id="playerArtist">imase</span>
         </div>
       </div>
-      <button class="mb-expand" id="mbExpand" title="展开歌单">☰</button>
+      <button class="mb-expand" id="mbExpand" title="打开音乐面板">☰</button>
     </div>
     <div class="music-progress-row">
       <div class="music-progress-track" id="progressTrack"><div class="music-progress-fill" id="progressFill"></div></div>
@@ -638,7 +637,6 @@ footer p{
     <div class="mf-tabs">
       <button class="mf-tab active" data-panel="playerPanel">播放</button>
       <button class="mf-tab" data-panel="searchPanel">搜索</button>
-      <button class="mf-tab" data-panel="playlistPanel">歌单</button>
     </div>
 
     <div class="mf-panel active" id="playerPanel">
@@ -654,10 +652,6 @@ footer p{
       <div class="mf-list" id="neteaseResults"></div>
     </div>
 
-    <div class="mf-panel" id="playlistPanel">
-      <div class="mf-playlist-tabs" id="playlistTabs"></div>
-      <div class="mf-list" id="savedSongs"></div>
-    </div>
   </div>
 </div>
 
@@ -683,8 +677,8 @@ footer p{
     <p class="section-sub">一个在代码与流程之间反复横跳的人。</p>
     <div class="about-grid">
       <div class="about-left">
-        <p>你好，我是 <strong>氿肆</strong>。一个普通的开发者 / 自动化爱好者 / 音游人 / 二次元。</p>
-        <p>白天写 n8n 工作流，晚上折腾各种自动化脚本。偶尔编编曲，偶尔打打音游。喜欢把重复的事情交给机器，自己腾出手来摸鱼。</p>
+        <p>你好，我是 <strong>氿肆</strong>。一个普通的开发者 / 自动化爱好者 / 二次元。</p>
+        <p>白天 vibe coding，晚上折腾各种 agent 插件。偶尔打打游戏，偶尔锻炼锻炼。喜欢把重复的事情交给机器，自己腾出手来学习 OR 干其他的。</p>
         <p>这个站是我自己瞎折腾的，会不定期更新。</p>
         <div class="skills-section">
           <h4>✧ 技术栈</h4>
@@ -701,18 +695,18 @@ footer p{
           </div>
           <h4>✧ 在玩的</h4>
           <div class="skill-tags">
-            <span class="skill-tag">Muse Dash</span><span class="skill-tag">Arcaea</span>
-            <span class="skill-tag">星露谷</span><span class="skill-tag">Splatoon 3</span>
-            <span class="skill-tag">Zelda</span>
+            <span class="skill-tag">我的世界</span><span class="skill-tag">泰拉瑞亚</span>
+            <span class="skill-tag">饥荒</span><span class="skill-tag">GTA5</span>
+            <span class="skill-tag">APEX</span><span class="skill-tag">CF</span>
           </div>
         </div>
       </div>
       <div class="about-right">
-        <div class="about-stat"><div class="about-stat-icon">🎂</div><div class="about-stat-info"><div class="label">生日</div><div class="val">5 月 12 日</div></div></div>
-        <div class="about-stat"><div class="about-stat-icon">📍</div><div class="about-stat-info"><div class="label">常驻</div><div class="val">中国 · 杭州</div></div></div>
-        <div class="about-stat"><div class="about-stat-icon">💼</div><div class="about-stat-info"><div class="label">职业</div><div class="val">自动化 / 前端开发</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">🎂</div><div class="about-stat-info"><div class="label">生日</div><div class="val">农历六月初五</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">📍</div><div class="about-stat-info"><div class="label">常驻</div><div class="val">中国 · 成都</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">💼</div><div class="about-stat-info"><div class="label">职业</div><div class="val">AI / Agent 开发</div></div></div>
         <div class="about-stat"><div class="about-stat-icon">🎵</div><div class="about-stat-info"><div class="label">最近循环</div><div class="val">NIGHT DANCER - imase</div></div></div>
-        <div class="about-stat"><div class="about-stat-icon">🎮</div><div class="about-stat-info"><div class="label">时长最久</div><div class="val">Splatoon 3 · 600h+</div></div></div>
+        <div class="about-stat"><div class="about-stat-icon">🎮</div><div class="about-stat-info"><div class="label">常玩游戏</div><div class="val">Minecraft</div></div></div>
       </div>
     </div>
   </div>
@@ -775,6 +769,29 @@ gsap.utils.toArray('.about-stat').forEach((s,i)=>{gsap.from(s,{x:-20,opacity:0,d
 
 // ─── Music Player (multi-song + visualizer) ───
 const $=(s)=>document.querySelector(s);
+
+const socialTargets=[
+  {title:'Bilibili',href:'https://space.bilibili.com/269300669?spm_id_from=333.40164.0.0'},
+  {title:'GitHub',href:'https://github.com/chenjiuxuan?tab=repositories'},
+];
+document.querySelectorAll('#socialsEl .social-btn').forEach((link,i)=>{
+  const target=socialTargets[i];
+  if(!target)return;
+  link.href=target.href;
+  link.title=target.title;
+  link.target='_blank';
+  link.rel='noopener noreferrer';
+});
+const socialsEl=$('#socialsEl');
+if(socialsEl&&!document.querySelector('[aria-label="QQ：1244044603"]')){
+  const qqLink=document.createElement('a');
+  qqLink.href='tencent://message/?uin=1244044603&Site=&Menu=yes';
+  qqLink.className='social-btn';
+  qqLink.title='QQ：1244044603';
+  qqLink.setAttribute('aria-label','QQ：1244044603');
+  qqLink.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.1c-2.8 0-5.06 2.28-5.06 6.18 0 1.05.18 2.07.5 3.01-.87.87-1.5 2.05-1.5 3.08 0 .44.12.8.35 1.06-.98.7-1.69 1.64-1.69 2.4 0 1.03 1.3 1.56 3.06 1.21.9 1.21 2.44 1.86 4.34 1.86s3.44-.65 4.34-1.86c1.76.35 3.06-.18 3.06-1.21 0-.76-.71-1.7-1.69-2.4.23-.26.35-.62.35-1.06 0-1.03-.63-2.21-1.5-3.08.32-.94.5-1.96.5-3.01C17.06 4.38 14.8 2.1 12 2.1Zm-2.4 6.7c.5 0 .9.55.9 1.22s-.4 1.22-.9 1.22-.9-.55-.9-1.22.4-1.22.9-1.22Zm4.8 0c.5 0 .9.55.9 1.22s-.4 1.22-.9 1.22-.9-.55-.9-1.22.4-1.22.9-1.22Zm-5.43 5.35c.84.56 1.85.87 3.03.87s2.19-.31 3.03-.87c.22-.15.52-.09.67.13.15.22.09.52-.13.67-.99.66-2.18 1.03-3.57 1.03s-2.58-.37-3.57-1.03a.48.48 0 0 1-.13-.67c.15-.22.45-.28.67-.13Z"/></svg>';
+  socialsEl.appendChild(qqLink);
+}
 const playlistData=[
   {source:'local',file:'bgm/01.mp3', cover:'bgm/cover01.jpg', song:'NIGHT DANCER', artist:'imase'},
   {source:'local',file:'bgm/02.mp3', cover:'bgm/cover02.jpg', song:'One Last Kiss', artist:'宇多田ヒカル'},
@@ -791,7 +808,7 @@ const playBtn=$('#playBtn'),playIcon=$('#playIcon'),prevBtn=$('#prevBtn'),nextBt
 const curTime=$('#currentTime'),totalTime=$('#totalTime');
 const volSlider=$('#volSlider'),barWave=$('#barWave'),barCtx=barWave.getContext('2d'),progressTrack=$('#progressTrack'),progressFill=$('#progressFill');
 const localList=$('#localList'),searchForm=$('#neteaseSearchForm'),searchInput=$('#neteaseSearchInput'),searchBtn=$('#neteaseSearchBtn');
-const searchStatus=$('#neteaseSearchStatus'),searchResults=$('#neteaseResults'),playlistTabs=$('#playlistTabs'),savedSongs=$('#savedSongs'),lyricsPanel=$('#lyricsPanel');
+const searchStatus=$('#neteaseSearchStatus'),searchResults=$('#neteaseResults'),lyricsPanel=$('#lyricsPanel');
 const playerStatus=document.createElement('div');
 playerStatus.className='mf-status';
 musicBar.appendChild(playerStatus);
@@ -806,15 +823,13 @@ function renderLocalList(){
 }
 
 async function loadPlaylists(){
-  try{const res=await fetch('/api/playlists');const data=await res.json();playlists=data.playlists||[]}catch{playlists=[]}
-  if(!playlists.length)playlists=[{id:'favorites',name:'收藏',songs:[]},{id:'visual-set',name:'可视集',songs:[]}];
-  renderPlaylists();
+  playlists=[];
 }
 async function savePlaylists(){
-  renderPlaylists();
-  try{await fetch('/api/playlists',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({playlists})})}catch(e){console.warn('歌单保存失败',e)}
+  playlists=[];
 }
 function renderPlaylists(){
+  return;
   playlistTabs.innerHTML=playlists.map(p=>`<button class="mf-playlist-tab ${p.id===activePlaylistId?'active':''}" data-playlist-id="${p.id}">${p.name}</button>`).join('');
   playlistTabs.querySelectorAll('[data-playlist-id]').forEach(btn=>btn.addEventListener('click',()=>{activePlaylistId=btn.dataset.playlistId;renderPlaylists()}));
   const active=getActivePlaylist();
@@ -824,11 +839,7 @@ function renderPlaylists(){
   savedSongs.querySelectorAll('[data-del-id]').forEach(btn=>btn.addEventListener('click',(e)=>{e.stopPropagation();active.songs=active.songs.filter(s=>String(s.id)!==String(btn.dataset.delId));savePlaylists()}));
 }
 function addSongToPlaylist(song){
-  const active=getActivePlaylist();
-  if(!active)return;
-  if(!active.songs.some(s=>String(s.id)===String(song.id))) active.songs.push(song);
-  searchStatus.textContent=`已加入${active.name}`;
-  savePlaylists();
+  searchStatus.textContent='公开站点已关闭共享歌单收藏';
 }
 
 function parseLrc(text){
@@ -861,9 +872,8 @@ async function searchNetease(keyword){
     if(!res.ok)throw new Error('search failed');
     const data=await res.json();const songs=data.songs||[];
     searchStatus.textContent=songs.length?'':'没有找到相关歌曲';
-    searchResults.innerHTML=songs.map((song,i)=>`<div class="mf-item-row"><button class="mf-item" data-result-idx="${i}"><span class="mf-item-index">${String(i+1).padStart(2,'0')}</span><span class="mf-item-info"><span class="mf-item-title">${song.name}</span><span class="mf-item-sub">${song.artist||'未知歌手'} · ${song.album||'未知专辑'}</span></span></button><button class="mf-item-add" data-add-idx="${i}" title="加入当前歌单">+</button></div>`).join('');
+    searchResults.innerHTML=songs.map((song,i)=>`<div class="mf-item-row"><button class="mf-item" data-result-idx="${i}"><span class="mf-item-index">${String(i+1).padStart(2,'0')}</span><span class="mf-item-info"><span class="mf-item-title">${song.name}</span><span class="mf-item-sub">${song.artist||'未知歌手'} · ${song.album||'未知专辑'}</span></span></button></div>`).join('');
     searchResults.querySelectorAll('[data-result-idx]').forEach(btn=>btn.addEventListener('click',()=>{songList=songs.map(toTrack);loadTrack(Number(btn.dataset.resultIdx));startPlayback();switchPanel('playerPanel')}));
-    searchResults.querySelectorAll('[data-add-idx]').forEach(btn=>btn.addEventListener('click',(e)=>{e.stopPropagation();addSongToPlaylist(songs[Number(btn.dataset.addIdx)])}));
   }catch(e){searchStatus.textContent='搜索失败'}finally{searchBtn.disabled=false}
 }
 
@@ -910,11 +920,11 @@ function drawViz(){
     const y=baseY-barH;
     const grad=barCtx.createLinearGradient(x,y,x,baseY);
     const hueShift=Math.sin(i*.09+now/2600)*.06;
-    grad.addColorStop(0,`rgba(${Math.round(214+20*amp)},${Math.round(250-8*hueShift)},${Math.round(236+14*amp)},${0.22+0.42*amp})`);
-    grad.addColorStop(.58,`rgba(${Math.round(126+34*amp)},${Math.round(226+16*amp)},${Math.round(218+18*amp)},${0.24+0.38*amp})`);
-    grad.addColorStop(1,`rgba(255,255,255,${0.12+0.22*amp})`);
+    grad.addColorStop(0,`rgba(${Math.round(180+20*amp)},${Math.round(210+16*amp)},${Math.round(170+14*amp)},${0.18+0.34*amp})`);
+    grad.addColorStop(.55,`rgba(${Math.round(103+20*amp)},${Math.round(168+15*amp)},${Math.round(138+15*amp)},${0.24+0.34*amp})`);
+    grad.addColorStop(1,`rgba(240,233,228,${0.1+0.2*amp})`);
     barCtx.fillStyle=grad;
-    barCtx.shadowColor=`rgba(159,244,232,${0.05+0.16*amp})`;
+    barCtx.shadowColor=`rgba(139,194,164,${0.06+0.14*amp})`;
     barCtx.shadowBlur=4*dpr;
     barCtx.beginPath();
     barCtx.roundRect(x,y,barW,barH,Math.min(barW/2,barH/2));
@@ -1041,10 +1051,6 @@ document.addEventListener('click',(e)=>{
     setMusicPinned(false);
   }
 });
-// 导航栏「音乐」链接 → 打开面板
-const navMusicLink=document.querySelector('a[href="#music"]');
-if(navMusicLink)navMusicLink.addEventListener('click',(e)=>{e.preventDefault();setMusicPanelOpen(true)});
-
 // ─── GitHub Timeline ───
 const GH_USER='chenjiuxuan';
 const eventIcons={PushEvent:'📤',CreateEvent:'✨',PublicEvent:'🌐',WatchEvent:'⭐',ForkEvent:'🍴',IssuesEvent:'💬',PullRequestEvent:'🔀',DeleteEvent:'🗑️'};
@@ -1121,7 +1127,13 @@ document.addEventListener('mouseleave',()=>{glow.style.opacity='0'});
 
 // ─── Smooth nav + active state ───
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});});
+  a.addEventListener('click',e=>{
+    const href=a.getAttribute('href');
+    if(!href||href==='#')return;
+    e.preventDefault();
+    const t=document.querySelector(href);
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
 });
 
 // Auto-highlight current section in nav
