@@ -1,0 +1,14 @@
+{
+  "name": "solo-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node local-server.mjs",
+    "start": "node local-server.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2"
+  }
+}

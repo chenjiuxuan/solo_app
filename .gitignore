@@ -11,3 +11,8 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Local runtime
+.server.log
+.server.err.log
+data/github-events.json
