@@ -843,6 +843,7 @@ const audio=new Audio();audio.volume=0.6;
 let isPlaying=false;
 
 const musicBar=$('#musicBar'),musicPopTrigger=$('#musicPopTrigger'),miniCoverImg=$('#miniCoverImg'),coverImg=$('#coverImg'),songEl=$('#playerSong'),artistEl=$('#playerArtist');
+coverImg.addEventListener('error',()=>{coverImg.src='bgm/cover01.jpg';if(miniCoverImg)miniCoverImg.src=coverImg.src});
 const playBtn=$('#playBtn'),playIcon=$('#playIcon'),prevBtn=$('#prevBtn'),nextBtn=$('#nextBtn');
 const curTime=$('#currentTime'),totalTime=$('#totalTime');
 const volSlider=$('#volSlider'),barWave=$('#barWave'),barCtx=barWave.getContext('2d'),progressTrack=$('#progressTrack'),progressFill=$('#progressFill');
@@ -852,7 +853,7 @@ const playerStatus=document.createElement('div');
 playerStatus.className='mf-status';
 musicBar.appendChild(playerStatus);
 
-function toTrack(song){return {source:'netease',id:song.id,song:song.name,artist:song.artist||'未知歌手',album:song.album||'',duration:song.duration||0,fee:song.fee}}
+function toTrack(song){return {source:'netease',id:song.id,song:song.name,artist:song.artist||'Unknown artist',album:song.album||'',cover:song.cover||'',duration:song.duration||0,fee:song.fee}}
 function setPlayIconPlaying(playing){playIcon.innerHTML=playing?'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>':'<path d="M5 3l14 9-14 9V3z"/>'}
 
 function renderLocalList(){
@@ -1037,7 +1038,8 @@ function startPlayback(options={}){
 function loadTrack(i){
   if(!songList[i])return;curIdx=i;const t=songList[i];
   audio.src=t.source==='netease'?`/api/netease/audio?id=${t.id}`:t.file;audio.load();
-  songEl.textContent=t.song;artistEl.textContent=t.artist||'';coverImg.src=t.cover||'bgm/cover01.jpg';
+  const coverSrc=t.cover?`${t.cover}${t.cover.includes('?')?'&':'?'}param=240y240`:'bgm/cover01.jpg';
+  songEl.textContent=t.song;artistEl.textContent=t.artist||'';coverImg.src=coverSrc;
   if(miniCoverImg)miniCoverImg.src=coverImg.src;
   curTime.textContent='0:00';totalTime.textContent='--:--';progressFill.style.width='0%';
   playerStatus.textContent='';

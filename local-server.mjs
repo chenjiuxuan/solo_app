@@ -292,6 +292,7 @@ app.get('/api/netease/search', async (req, res) => {
       name: song.name,
       artist: (song.artists || song.ar || []).map((artist) => artist.name).filter(Boolean).join(' / '),
       album: song.album?.name || song.al?.name || '',
+      cover: song.album?.picUrl || song.al?.picUrl || '',
       duration: song.duration || song.dt || 0,
       fee: song.fee,
     }));
