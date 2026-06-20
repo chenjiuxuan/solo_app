@@ -246,7 +246,9 @@ nav{
   overflow:hidden;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.66);
   transition:transform .34s cubic-bezier(.34,1.56,.64,1),border-color .22s ease,box-shadow .22s ease,background .22s ease;
-  cursor:default;
+  color:inherit;
+  text-decoration:none;
+  cursor:pointer;
 }
 .work-card:nth-child(1){grid-column:span 7;min-height:370px}
 .work-card:nth-child(2){grid-column:span 5;min-height:370px}
@@ -261,6 +263,10 @@ nav{
   background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(232,240,230,.5));
 }
 .work-card:active{transform:translateY(-3px) scale(.99)}
+.work-card:focus-visible{
+  outline:3px solid rgba(111,157,131,.32);
+  outline-offset:5px;
+}
 .work-thumb{
   width:100%;height:148px;
   background:
@@ -724,6 +730,7 @@ button{font-family:inherit}
     <a href="#works">作品</a>
     <a href="#journal">动态</a>
     <a href="#about">关于</a>
+    <a href="/links">链接</a>
   </div>
 </nav>
 
@@ -757,12 +764,12 @@ button{font-family:inherit}
     <h2 class="section-title">做过的玩意儿</h2>
     <p class="section-sub">一些写过的代码、搭过的流程、折腾过的项目。</p>
     <div class="works-grid" id="worksGrid">
-      <div class="work-card"><div class="work-thumb">⚡</div><div class="work-info"><h3>自动化工作流</h3><p>基于 n8n 搭建的日常自动化流程，涵盖数据同步、消息通知、定时任务等。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">自动化</span></div></div></div>
+      <a class="work-card" href="/n8n" aria-label="查看 n8n 自动化工作流展示页"><div class="work-thumb">⚡</div><div class="work-info"><h3>自动化工作流</h3><p>基于 n8n 搭建的日常自动化流程，涵盖数据同步、消息通知、定时任务等。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">自动化</span></div></div></a>
       <div class="work-card"><div class="work-thumb">💻</div><div class="work-info"><h3>Orbit 项目页</h3><p>一个编辑主义风格的 SaaS 着陆页，纯手工排版。</p><div class="work-tags"><span class="work-tag">HTML/CSS</span><span class="work-tag">GSAP</span></div></div></div>
       <div class="work-card"><div class="work-thumb">🔌</div><div class="work-info"><h3>API 集成中间件</h3><p>一个轻量级的 API 网关，统一对接多个第三方服务，支持缓存和限流。</p><div class="work-tags"><span class="work-tag">Node.js</span><span class="work-tag">API</span></div></div></div>
-      <div class="work-card"><div class="work-thumb">🧩</div><div class="work-info"><h3>n8n 节点包</h3><p>开发了几个自定义 n8n 节点，用于对接国内常用 API 和服务。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">Node.js</span></div></div></div>
+      <a class="work-card" href="/n8n" aria-label="查看 n8n 节点包展示页"><div class="work-thumb">🧩</div><div class="work-info"><h3>n8n 节点包</h3><p>开发了几个自定义 n8n 节点，用于对接国内常用 API 和服务。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">Node.js</span></div></div></a>
       <div class="work-card"><div class="work-thumb">📦</div><div class="work-info"><h3>CLI 小工具</h3><p>一个用 Rust 写的文件批量重命名工具，开源在 GitHub。</p><div class="work-tags"><span class="work-tag">Rust</span><span class="work-tag">CLI</span></div></div></div>
-      <div class="work-card"><div class="work-thumb">🔄</div><div class="work-info"><h3>自动化工坊</h3><p>一套 n8n 工作流模板集，涵盖数据处理、通知推送、API 编排等场景。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">自动化</span></div></div></div>
+      <a class="work-card" href="/n8n" aria-label="查看 n8n 自动化工坊展示页"><div class="work-thumb">🔄</div><div class="work-info"><h3>自动化工坊</h3><p>一套 n8n 工作流模板集，涵盖数据处理、通知推送、API 编排等场景。</p><div class="work-tags"><span class="work-tag">n8n</span><span class="work-tag">自动化</span></div></div></a>
     </div>
   </div>
 </section>

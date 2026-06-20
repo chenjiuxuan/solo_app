@@ -401,6 +401,14 @@ app.get('/api/netease/audio', async (req, res) => {
   }
 });
 
+app.get('/links', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'links.html'));
+});
+
+app.get('/n8n', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'n8n.html'));
+});
+
 app.use(express.static(__dirname, {
   maxAge: '7d',
   setHeaders: (res, filePath) => {

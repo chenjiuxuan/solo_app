@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="氿肆的 n8n 自动化工作流展示页：把信息采集、AI 处理、条件分支和消息同步编排成可运行的流程。">
+<meta property="og:title" content="氿肆 · n8n 自动化工作流">
+<meta property="og:description" content="把重复的流程交给机器，让数据、AI 和通知自己跑起来。">
+<meta property="og:image" content="assets/avatar.jpg">
+<meta name="theme-color" content="#f4f2ee">
+<link rel="icon" href="assets/avatar.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<title>氿肆 · n8n 自动化工作流</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#f5f2ec;
+  --paper-deep:#ebe6dc;
+  --ink:#272431;
+  --muted:rgba(39,36,49,.62);
+  --soft:rgba(39,36,49,.4);
+  --accent:#6f9d83;
+  --accent-dark:#527a64;
+  --accent-soft:rgba(111,157,131,.14);
+  --line:rgba(111,157,131,.22);
+  --glass:rgba(255,255,255,.58);
+  --shadow:0 28px 80px rgba(80,105,86,.15);
+  --shadow-sm:0 14px 38px rgba(80,105,86,.11);
+  --radius-xl:34px;
+  --radius-lg:24px;
+  --radius-md:16px;
+}
+html{background:var(--paper);scroll-behavior:smooth;overflow-x:hidden}
+body{
+  min-height:100dvh;
+  font-family:'Noto Sans SC',system-ui,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(ellipse 42% 38% at 8% 16%,rgba(176,204,181,.42),transparent 72%),
+    radial-gradient(ellipse 46% 44% at 92% 72%,rgba(217,209,224,.32),transparent 70%),
+    radial-gradient(ellipse 30% 26% at 54% 8%,rgba(255,255,255,.72),transparent 72%),
+    linear-gradient(180deg,#fbfaf7 0%,var(--paper) 48%,var(--paper-deep) 100%);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  font-variant-numeric:tabular-nums;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.28;
+  background-image:
+    radial-gradient(rgba(39,36,49,.055) .7px,transparent .7px),
+    linear-gradient(90deg,rgba(111,157,131,.05) 1px,transparent 1px),
+    linear-gradient(rgba(111,157,131,.045) 1px,transparent 1px);
+  background-size:3px 3px,88px 88px,88px 88px;
+  mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.84) 52%,rgba(0,0,0,.68) 100%);
+}
+body::after{
+  content:'';position:fixed;inset:auto -10% -18% -10%;height:46%;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(111,157,131,.13),transparent 68%);
+  filter:blur(28px);
+}
+::selection{background:rgba(111,157,131,.22);color:var(--ink)}
+:focus-visible{outline:2px solid rgba(111,157,131,.7);outline-offset:4px}
+a{color:inherit}
+.skip-link{
+  position:fixed;left:18px;top:14px;z-index:10;transform:translateY(-160%);
+  padding:10px 14px;border-radius:13px;background:var(--ink);color:#fff;text-decoration:none;font-weight:800;font-size:.82rem;
+  transition:transform .22s ease;
+}
+.skip-link:focus{transform:translateY(0)}
+.shell{position:relative;z-index:1;width:min(1240px,calc(100% - 48px));margin:0 auto;padding:30px 0 64px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:clamp(48px,8vw,92px);
+}
+.brand,.navlink{
+  display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:var(--muted);
+  min-height:40px;padding:0 12px;border-radius:13px;font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;
+  transition:transform .22s ease,background .22s ease,color .22s ease,box-shadow .22s ease;
+}
+.brand-mark{width:10px;height:10px;border-radius:3px;background:var(--accent);box-shadow:10px 0 0 rgba(111,157,131,.34),20px 0 0 rgba(111,157,131,.18)}
+.brand:hover,.navlink:hover{color:var(--ink);background:rgba(255,255,255,.58);box-shadow:inset 0 1px 0 rgba(255,255,255,.72);transform:translateY(-1px)}
+.nav{display:flex;gap:6px;align-items:center}
+.navlink.active{color:var(--ink);background:rgba(111,157,131,.13)}
+.hero{
+  position:relative;display:grid;grid-template-columns:minmax(0,.82fr) minmax(440px,1.18fr);
+  gap:clamp(42px,7vw,98px);align-items:center;margin-bottom:clamp(88px,11vw,142px);
+}
+.hero::before{
+  content:'automation';position:absolute;left:-.05em;top:-.28em;z-index:-1;
+  font-family:'Outfit','Noto Sans SC',sans-serif;font-size:clamp(5rem,13vw,13rem);font-weight:900;letter-spacing:-.08em;
+  color:rgba(111,157,131,.052);line-height:1;
+}
+.eyebrow{
+  display:inline-grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;margin-bottom:18px;
+  color:var(--accent-dark);font-size:.78rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+}
+.eyebrow::before{content:'';width:34px;height:2px;border-radius:999px;background:var(--accent)}
+h1{
+  display:grid;gap:5px;width:min(100%,34rem);max-width:none;margin-bottom:26px;font-family:'Outfit','Noto Sans SC',sans-serif;
+  line-height:.88;font-weight:900;text-wrap:balance;
+}
+.title-n8n{
+  display:block;font-size:clamp(4.8rem,9.8vw,9.4rem);letter-spacing:-.075em;
+}
+.title-cn{
+  display:block;font-size:clamp(2.9rem,5.6vw,5.45rem);letter-spacing:-.055em;white-space:nowrap;
+}
+.lead{max-width:36rem;color:var(--muted);font-size:1.05rem;line-height:1.92;text-wrap:pretty}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+.button{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:0 17px;border-radius:15px;
+  text-decoration:none;font-size:.88rem;font-weight:850;background:rgba(255,255,255,.6);border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+  transition:transform .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.button.primary{background:rgba(111,157,131,.18);border-color:rgba(111,157,131,.38);color:#274233}
+.button.text{background:transparent;border-color:transparent;box-shadow:none;color:var(--muted)}
+.button:hover{transform:translateY(-2px);background:rgba(255,255,255,.82);box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,.8)}
+.button:active{transform:translateY(0) scale(.98)}
+.button.primary::after{
+  content:'';width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.55;transform:translateY(1px);
+}
+.stats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:42px;max-width:36rem;
+}
+.stat{
+  position:relative;overflow:hidden;padding:15px 14px;border-radius:18px;background:rgba(255,255,255,.5);border:1px solid rgba(111,157,131,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.68);
+}
+.stat::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:rgba(111,157,131,.42);
+}
+.stat strong{display:block;font-family:'Outfit','Noto Sans SC',sans-serif;font-size:1.2rem;letter-spacing:-.02em}
+.stat span{display:block;margin-top:3px;color:var(--soft);font-size:.76rem;font-weight:750}
+.workflow-panel{
+  position:relative;min-height:590px;padding:30px;border-radius:var(--radius-xl);overflow:hidden;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.76),rgba(239,244,235,.48)),
+    radial-gradient(circle at 12% 12%,rgba(255,255,255,.8),transparent 34%);
+  border:1px solid rgba(111,157,131,.24);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.76),inset 0 -1px 0 rgba(111,157,131,.08);
+  isolation:isolate;
+}
+.workflow-panel::before{
+  content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at var(--mx,28%) var(--my,24%),rgba(111,157,131,.18),transparent 24%),
+    linear-gradient(90deg,rgba(111,157,131,.06) 1px,transparent 1px),
+    linear-gradient(rgba(111,157,131,.055) 1px,transparent 1px);
+  background-size:auto,54px 54px,54px 54px;
+}
+.workflow-panel::after{
+  content:'';position:absolute;inset:14px;border-radius:25px;border:1px solid rgba(255,255,255,.5);pointer-events:none;
+}
+.workflow-head{
+  position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px;
+}
+.workflow-kicker{color:var(--soft);font-size:.74rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.workflow-title{margin-top:6px;font-family:'Outfit','Noto Sans SC',sans-serif;font-size:1.34rem;font-weight:900;letter-spacing:-.03em}
+.run-pill{
+  display:inline-flex;align-items:center;gap:8px;flex-shrink:0;padding:8px 11px;border-radius:14px;
+  color:var(--accent-dark);background:rgba(111,157,131,.12);font-size:.76rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+}
+.run-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(111,157,131,.28);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 9px rgba(111,157,131,.08)}}
+.flow-map{position:relative;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(6,68px);gap:12px;min-height:444px;z-index:1}
+.flow-map::before{
+  content:'';position:absolute;left:7%;right:4%;top:50%;height:132px;transform:translateY(-50%);
+  border-radius:999px;background:linear-gradient(90deg,rgba(111,157,131,.09),rgba(111,157,131,.04),rgba(111,157,131,.08));
+  filter:blur(22px);pointer-events:none;
+}
+.node{
+  --node-glow:rgba(111,157,131,.12);
+  position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:132px;padding:18px;border-radius:21px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(111,157,131,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.68),0 12px 30px rgba(79,105,86,.06);
+  transition:transform .24s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+}
+.node::before{
+  content:'';position:absolute;inset:1px;border-radius:20px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.55),transparent 42%,rgba(111,157,131,.08));
+  opacity:.72;
+}
+.node:hover,.node.active{
+  transform:translateY(-5px);border-color:rgba(111,157,131,.48);background:rgba(255,255,255,.84);
+  box-shadow:0 18px 42px var(--node-glow),inset 0 1px 0 rgba(255,255,255,.78);
+}
+.node::after{
+  content:attr(data-tip);position:absolute;left:14px;right:14px;bottom:calc(100% + 9px);z-index:5;
+  padding:10px 11px;border-radius:13px;background:rgba(39,36,49,.9);color:#fff;
+  font-size:.74rem;line-height:1.45;opacity:0;transform:translateY(7px);pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease;
+}
+.node:hover::after{opacity:1;transform:translateY(0)}
+.node.trigger{grid-column:1 / 5;grid-row:1 / 3}
+.node.clean{grid-column:5 / 9;grid-row:2 / 4}
+.node.agent{grid-column:9 / 13;grid-row:1 / 3}
+.node.branch{grid-column:2 / 6;grid-row:4 / 6}
+.node.record{grid-column:5 / 9;grid-row:5 / 7}
+.node.notify{grid-column:9 / 13;grid-row:4 / 6}
+.node-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.node-top,.node>div:not(.node-top){position:relative;z-index:1}
+.node-code{
+  width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-family:'Outfit','Noto Sans SC',sans-serif;font-size:.9rem;font-weight:900;background:rgba(111,157,131,.1);color:var(--accent-dark);
+}
+.status{
+  font-size:.68rem;font-weight:900;color:var(--soft);letter-spacing:.08em;text-transform:uppercase;
+  transition:color .2s ease;
+}
+.node.active .status{color:#a27634}
+.node.done .status{color:var(--accent-dark)}
+.node-title{display:block;font-family:'Outfit','Noto Sans SC',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:-.025em;margin-bottom:8px}
+.node-desc{display:block;color:var(--muted);font-size:.8rem;line-height:1.55}
+.node-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.chip{display:inline-flex;padding:4px 7px;border-radius:8px;background:rgba(111,157,131,.09);color:rgba(39,36,49,.58);font-size:.68rem;font-weight:800}
+.wire{
+  position:absolute;z-index:0;pointer-events:none;border-radius:999px;background:rgba(111,157,131,.18);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(255,255,255,.3),0 0 18px rgba(111,157,131,.11);
+}
+.wire::after{
+  content:'';position:absolute;left:-38%;top:0;width:34%;height:100%;border-radius:inherit;
+  background:linear-gradient(90deg,transparent,rgba(111,157,131,.82),transparent);
+  animation:packet 1.65s linear infinite;
+}
+.wire.v::after{left:0;top:-38%;width:100%;height:34%;animation:packetY 1.65s linear infinite}
+.wire.a{left:28%;top:116px;width:23%;height:2px}
+.wire.b{left:63%;top:116px;width:18%;height:2px}
+.wire.c{left:31%;top:276px;width:2px;height:96px}
+.wire.d{left:41%;top:360px;width:26%;height:2px}
+.wire.e{left:66%;top:360px;width:22%;height:2px}
+@keyframes packet{to{left:105%}}
+@keyframes packetY{to{top:105%}}
+.run-strip{
+  position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:18px;z-index:1;
+}
+.run-step{
+  min-height:7px;border-radius:999px;background:rgba(111,157,131,.11);overflow:hidden;
+}
+.run-step::before{content:'';display:block;width:0;height:100%;border-radius:inherit;background:rgba(111,157,131,.62);transition:width .32s ease}
+.run-step.done::before,.run-step.active::before{width:100%}
+.section-head{margin:0 0 28px;max-width:720px}
+.section-head .eyebrow{margin-bottom:12px}
+.section-head h2{font-family:'Outfit','Noto Sans SC',sans-serif;font-size:clamp(2.3rem,5vw,4.7rem);line-height:.96;letter-spacing:-.05em;margin-bottom:13px;text-wrap:balance}
+.section-head p{max-width:42rem;color:var(--muted);line-height:1.8;text-wrap:pretty}
+.scenarios{margin-bottom:80px}
+.scenario-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.scenario{
+  position:relative;min-height:230px;padding:26px;border-radius:26px;background:rgba(255,255,255,.52);
+  border:1px solid rgba(111,157,131,.15);box-shadow:inset 0 1px 0 rgba(255,255,255,.66);
+  overflow:hidden;transition:transform .24s ease,background .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+.scenario::before{
+  content:'';position:absolute;inset:auto -16% -36% 34%;height:70%;background:radial-gradient(ellipse at center,rgba(111,157,131,.16),transparent 68%);pointer-events:none;
+}
+.scenario:hover{transform:translateY(-5px);background:rgba(255,255,255,.72);border-color:rgba(111,157,131,.3);box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,.76)}
+.scenario.primary{grid-column:1 / 7;min-height:310px}
+.scenario.middle{grid-column:7 / 13}
+.scenario.end{grid-column:7 / 13}
+.scenario-index{display:inline-flex;margin-bottom:28px;color:var(--accent-dark);font-size:.76rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.scenario h3{font-family:'Outfit','Noto Sans SC',sans-serif;font-size:clamp(1.35rem,2.4vw,2.05rem);letter-spacing:-.035em;margin-bottom:12px}
+.scenario p{position:relative;color:var(--muted);font-size:.9rem;line-height:1.78;max-width:44rem}
+.scenario.primary p{font-size:.96rem}
+.scenario.primary::after{
+  content:'collect → clean → archive';position:absolute;right:24px;bottom:20px;
+  color:rgba(111,157,131,.34);font-family:'Outfit','Noto Sans SC',sans-serif;font-size:.78rem;font-weight:900;letter-spacing:.08em;
+}
+.cta{
+  position:relative;display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end;padding:30px;border-radius:30px;
+  background:linear-gradient(135deg,rgba(255,255,255,.62),rgba(236,244,235,.42));border:1px solid rgba(111,157,131,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72);overflow:hidden;
+}
+.cta::before{
+  content:'';position:absolute;right:-10%;top:-50%;width:44%;height:170%;background:radial-gradient(ellipse at center,rgba(111,157,131,.18),transparent 65%);pointer-events:none;
+}
+.cta h2{position:relative;font-family:'Outfit','Noto Sans SC',sans-serif;font-size:clamp(1.8rem,3.6vw,3.2rem);line-height:1;letter-spacing:-.045em;margin-bottom:12px;text-wrap:balance}
+.cta p{position:relative;max-width:42rem;color:var(--muted);font-size:.94rem;line-height:1.75}
+.cta-actions{position:relative;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:940px){
+  .shell{width:min(100% - 32px,720px);padding-top:24px}
+  .hero{grid-template-columns:1fr;gap:42px;margin-bottom:84px}
+  h1{width:100%;max-width:34rem}
+  .title-n8n{font-size:clamp(4.2rem,18vw,7.2rem)}
+  .title-cn{font-size:clamp(2.5rem,10vw,4.5rem)}
+  .workflow-panel{min-height:0;padding:24px}
+  .flow-map{display:flex;flex-direction:column;gap:16px;min-height:0}
+  .node{min-height:0}
+  .node.trigger,.node.clean,.node.agent,.node.branch,.node.record,.node.notify{grid-column:auto;grid-row:auto}
+  .node::before{content:'';position:absolute;left:38px;top:-17px;width:2px;height:17px;background:rgba(111,157,131,.2)}
+  .node:first-of-type::before{display:none}
+  .wire{display:none}
+  .run-strip{grid-template-columns:repeat(6,1fr)}
+  .scenario-grid{grid-template-columns:1fr}
+  .scenario.primary,.scenario.middle,.scenario.end{grid-column:auto;min-height:220px}
+  .cta{grid-template-columns:1fr;align-items:start}
+  .cta-actions{justify-content:flex-start}
+}
+@media(max-width:560px){
+  .topbar{align-items:flex-start}
+  .nav{flex-wrap:wrap;justify-content:flex-end}
+  h1{gap:3px}
+  .title-n8n{font-size:clamp(3.8rem,19vw,5.8rem)}
+  .title-cn{font-size:clamp(2.05rem,10vw,3.15rem)}
+  .lead{font-size:.97rem}
+  .stats{grid-template-columns:1fr}
+  .workflow-head{flex-direction:column}
+  .button{width:100%}
+  .hero-actions,.cta-actions{width:100%}
+  .run-strip{gap:5px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#workflow">跳到流程图</a>
+<main class="shell">
+  <nav class="topbar" aria-label="页面导航">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span><span>氿肆</span></a>
+    <div class="nav">
+      <a class="navlink active" href="/n8n">n8n</a>
+      <a class="navlink" href="/links">links</a>
+      <a class="navlink" href="/">home</a>
+    </div>
+  </nav>
+
+  <section class="hero" aria-labelledby="pageTitle">
+    <div class="hero-copy">
+      <div class="eyebrow">workflow lab</div>
+      <h1 id="pageTitle"><span class="title-n8n">n8n</span><span class="title-cn">自动化工作流</span></h1>
+      <p class="lead">我把重复的事拆成节点：收集信息、清洗数据、调用 AI 或 Agent，再把结果同步到该出现的地方。人负责判断，机器负责跑腿。</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#workflow">查看流程</a>
+        <a class="button text" href="/">返回首页</a>
+      </div>
+      <div class="stats" aria-label="自动化能力摘要">
+        <div class="stat"><strong>6</strong><span>核心节点</span></div>
+        <div class="stat"><strong>3</strong><span>常用场景</span></div>
+        <div class="stat"><strong>1</strong><span>清晰闭环</span></div>
+      </div>
+    </div>
+
+    <section class="workflow-panel" id="workflow" aria-label="n8n 动态流程图">
+      <div class="workflow-head">
+        <div>
+          <div class="workflow-kicker">automation graph</div>
+          <div class="workflow-title">从触发到通知的运行草图</div>
+        </div>
+        <span class="run-pill"><span class="run-dot" aria-hidden="true"></span><span id="runLabel">running</span></span>
+      </div>
+      <div class="flow-map" id="flow">
+        <span class="wire a"></span><span class="wire b"></span><span class="wire v c"></span><span class="wire d"></span><span class="wire e"></span>
+        <article class="node trigger active" data-tip="定时、Webhook 或表单事件都可以作为流程入口。">
+          <div class="node-top"><span class="node-code">01</span><span class="status">running</span></div>
+          <div><span class="node-title">触发器</span><span class="node-desc">Webhook / Cron / Form</span></div>
+          <div class="node-meta"><span class="chip">入口</span><span class="chip">监听</span></div>
+        </article>
+        <article class="node clean" data-tip="把来源不同的数据统一字段、过滤空值和重复项。">
+          <div class="node-top"><span class="node-code">02</span><span class="status">waiting</span></div>
+          <div><span class="node-title">数据清洗</span><span class="node-desc">Normalize / Filter / Merge</span></div>
+          <div class="node-meta"><span class="chip">去重</span><span class="chip">归一</span></div>
+        </article>
+        <article class="node agent" data-tip="调用模型或 Agent，把原始信息变成摘要、标签或下一步动作。">
+          <div class="node-top"><span class="node-code">03</span><span class="status">waiting</span></div>
+          <div><span class="node-title">AI / Agent</span><span class="node-desc">Summarize / Tag / Decide</span></div>
+          <div class="node-meta"><span class="chip">摘要</span><span class="chip">判断</span></div>
+        </article>
+        <article class="node branch" data-tip="根据状态、优先级或置信度走不同分支。">
+          <div class="node-top"><span class="node-code">04</span><span class="status">waiting</span></div>
+          <div><span class="node-title">条件分支</span><span class="node-desc">IF / Switch / Retry</span></div>
+          <div class="node-meta"><span class="chip">分流</span><span class="chip">重试</span></div>
+        </article>
+        <article class="node record" data-tip="把结果同步到表格、数据库、GitHub issue 或知识库。">
+          <div class="node-top"><span class="node-code">05</span><span class="status">waiting</span></div>
+          <div><span class="node-title">同步记录</span><span class="node-desc">Sheet / DB / GitHub</span></div>
+          <div class="node-meta"><span class="chip">归档</span><span class="chip">追踪</span></div>
+        </article>
+        <article class="node notify" data-tip="把重要结果推到 QQ、邮件或其它通知渠道。">
+          <div class="node-top"><span class="node-code">06</span><span class="status">waiting</span></div>
+          <div><span class="node-title">消息通知</span><span class="node-desc">QQ / Mail / Webhook</span></div>
+          <div class="node-meta"><span class="chip">提醒</span><span class="chip">闭环</span></div>
+        </article>
+      </div>
+      <div class="run-strip" aria-hidden="true">
+        <span class="run-step"></span><span class="run-step"></span><span class="run-step"></span><span class="run-step"></span><span class="run-step"></span><span class="run-step"></span>
+      </div>
+    </section>
+  </section>
+
+  <section class="scenarios" aria-labelledby="scenarioTitle">
+    <div class="section-head">
+      <div class="eyebrow">use cases</div>
+      <h2 id="scenarioTitle">不是炫技，是把日常杂活收进流程里。</h2>
+      <p>这里展示的是虚拟但常见的自动化场景。真正接项目时，我会按数据源、触发频率、失败补偿和通知对象单独拆流程。</p>
+    </div>
+    <div class="scenario-grid">
+      <article class="scenario primary">
+        <span class="scenario-index">scenario 01</span>
+        <h3>信息采集与整理</h3>
+        <p>把网页、表单和 API 返回的数据统一成可用格式，自动去重、归档和标记。适合资料收集、日报汇总、项目线索整理。</p>
+      </article>
+      <article class="scenario middle">
+        <span class="scenario-index">scenario 02</span>
+        <h3>AI 内容处理</h3>
+        <p>让模型负责摘要、分类、提取行动项，人只检查结果，不再复制粘贴。</p>
+      </article>
+      <article class="scenario end">
+        <span class="scenario-index">scenario 03</span>
+        <h3>消息通知与同步</h3>
+        <p>把关键更新推送到 QQ、邮件或项目工具，并把过程写进日志方便追踪。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="cta" aria-label="联系与返回">
+    <div>
+      <h2>重复的流程，就该交给流程。</h2>
+      <p>这是一个展示页，不连接真实 n8n 实例。真正的工作流可以按你的数据源、Agent 能力和通知渠道重新编排。</p>
+    </div>
+    <div class="cta-actions">
+      <a class="button primary" href="/">返回首页</a>
+      <a class="button" href="https://github.com/chenjiuxuan?tab=repositories" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a class="button" href="tencent://message/?uin=1244044603&Site=&Menu=yes">QQ</a>
+    </div>
+  </section>
+</main>
+
+<script src="/vendor/gsap.min.js"></script>
+<script>
+const nodes=[...document.querySelectorAll('.node')];
+const steps=[...document.querySelectorAll('.run-step')];
+const runLabel=document.getElementById('runLabel');
+const panel=document.querySelector('.workflow-panel');
+let activeIndex=0;
+let flowTimer=null;
+
+function setNodeState(){
+  nodes.forEach((node,index)=>{
+    const status=node.querySelector('.status');
+    const isDone=index<activeIndex;
+    const isActive=index===activeIndex;
+    node.classList.toggle('active',isActive);
+    node.classList.toggle('done',isDone);
+    status.textContent=isDone?'success':isActive?'running':'waiting';
+  });
+  steps.forEach((step,index)=>{
+    step.classList.toggle('active',index===activeIndex);
+    step.classList.toggle('done',index<activeIndex);
+  });
+  runLabel.textContent=activeIndex===nodes.length-1?'notify':'running';
+  activeIndex=(activeIndex+1)%nodes.length;
+}
+
+setNodeState();
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  flowTimer=setInterval(setNodeState,1250);
+}
+
+panel?.addEventListener('pointermove',(event)=>{
+  const rect=panel.getBoundingClientRect();
+  panel.style.setProperty('--mx',`${((event.clientX-rect.left)/rect.width)*100}%`);
+  panel.style.setProperty('--my',`${((event.clientY-rect.top)/rect.height)*100}%`);
+});
+
+if(window.gsap){
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){
+    gsap.from('.topbar',{y:-18,opacity:0,duration:.5,ease:'power2.out'});
+    gsap.from('.hero-copy > *',{y:26,opacity:0,duration:.65,stagger:.08,ease:'power3.out',delay:.08});
+    gsap.from('.workflow-panel',{y:36,opacity:0,scale:.975,duration:.78,ease:'power3.out',delay:.18});
+    gsap.from('.scenario',{y:30,opacity:0,duration:.55,stagger:.08,ease:'power2.out',delay:.26});
+    gsap.from('.cta',{y:24,opacity:0,duration:.55,ease:'power2.out',delay:.32});
+  }
+}
+
+window.addEventListener('beforeunload',()=>{if(flowTimer)clearInterval(flowTimer)});
+</script>
+</body>
+</html>
